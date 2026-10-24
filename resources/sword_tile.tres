@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://btoe7fn47ldcn"]
+
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_ylhu5"]
+
+[resource]
+script = ExtResource("1_ylhu5")
+id = &"sword"
+display_name = "Sword Tile"
+description = "Deals damage to the enemy tile in the same cell after each turn"
+max_hp = 2
+cost = 6
+ability_id = &"sword"
+ability_power = 1
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

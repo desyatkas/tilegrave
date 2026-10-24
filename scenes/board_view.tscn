@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://mlwe4gckryex"]
+
+[ext_resource type="Script" uid="uid://4jhwgwrr84qg" path="res://scripts/board_view.gd" id="1_u67s4"]
+
+[node name="BoardView" type="GridContainer" unique_id=1796937213]
+offset_right = 512.0
+offset_bottom = 512.0
+columns = 4
+script = ExtResource("1_u67s4")
