@@ -1,5 +1,5 @@
-extends Resource
 class_name TileDefinition
+extends Resource
 
 @export var id: StringName
 @export var display_name: String
