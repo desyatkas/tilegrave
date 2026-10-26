@@ -4,8 +4,12 @@ extends GridContainer
 signal cell_pressed(idx: int)
 signal tile_drop_requested(idx: int, definition: TileDefinition, offer_index: int)
 
+const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/board_cell.tscn")
+const EMPTY_CELL_ICON: Texture2D = preload("res://textures/empty_board_cell.png")
+const OCCUPIED_CELL_ICON: Texture2D = preload("res://textures/board_cell.png")
+
 var board_state: BoardState
-var cell_buttons: Array[Button]
+var cell_buttons: Array[BoardCell] = []
 var accepts_tile_drops: bool = false
 var available_energy: int = 0
 
@@ -18,14 +22,13 @@ func setup(p_board_state: BoardState) -> void:
 	board_state = p_board_state
 
 	for idx in range(16):
-		var button: BoardCell = BoardCell.new()
-		button.cell_idx = idx
-		button.board_view = self
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		button.pressed.connect(_on_cell_pressed.bind(idx))
-		add_child(button)
-		cell_buttons.append(button)
+		var b_cell: BoardCell = BOARD_CELL_SCENE.instantiate()
+
+		b_cell.cell_idx = idx
+		b_cell.board_view = self
+		b_cell.pressed.connect(_on_cell_pressed.bind(idx))
+		add_child(b_cell)
+		cell_buttons.append(b_cell)
 
 	refresh()
 
@@ -33,19 +36,35 @@ func setup(p_board_state: BoardState) -> void:
 func refresh() -> void:
 	for idx in range(16):
 		var tile: TileState = board_state.cells[idx]
+		var b_cell: BoardCell = cell_buttons[idx]
+
+		b_cell.cell_icon.texture = EMPTY_CELL_ICON if tile == null else OCCUPIED_CELL_ICON
+		b_cell.cell_icon.modulate = Color.WHITE
 
 		if tile == null:
-			cell_buttons[idx].text = ""
-		elif tile.is_dead():
-			cell_buttons[idx].text = "%s\nDEAD (%d)" % [
-				tile.definition.display_name,
-				tile.turns_until_destroyed
-			]
+			b_cell.tooltip_text = ""
+			b_cell.tile_icon.texture = null
+			b_cell.hp_label.text = ""
+			b_cell.turns_until_destroyed_label.text = ""
 		else:
-			cell_buttons[idx].text = "%s\nHP: %d" % [
-				tile.definition.display_name,
-				tile.hp
-			]
+			if tile.is_alive():
+				b_cell.tooltip_text = "%s\n%d/%d HP\n\n%s" % [
+					tile.definition.display_name,
+					tile.hp,
+					tile.max_hp,
+					tile.definition.description
+				]
+			else:
+				b_cell.tooltip_text = "%s\nDEAD - %d turns left until destroying\n\n%s" % [
+					tile.definition.display_name,
+					tile.turns_until_destroyed,
+					tile.definition.description
+				]
+				b_cell.cell_icon.modulate = Color.WHITE.darkened(0.5)
+
+			b_cell.tile_icon.texture = tile.definition.icon
+			b_cell.hp_label.text = "%d/%d" % [tile.hp, tile.max_hp]
+			b_cell.turns_until_destroyed_label.text = str(tile.turns_until_destroyed) if tile.is_dead() else ""
 
 
 func can_accept_drop(idx: int, data: Variant) -> bool:
@@ -74,4 +93,5 @@ func handle_drop(idx: int, data: Variant) -> void:
 
 	var definition: TileDefinition = data.get("definition")
 	var offer_index: int = int(data.get("offer_index", -1))
+
 	tile_drop_requested.emit(idx, definition, offer_index)

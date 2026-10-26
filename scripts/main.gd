@@ -1,16 +1,16 @@
 class_name Main
 extends Control
 
-const LAZY_TILE: TileDefinition = preload("res://resources/lazy_tile.tres")
+const HEART_TILE: TileDefinition = preload("res://resources/heart_tile.tres")
 const SWORD_TILE: TileDefinition = preload("res://resources/sword_tile.tres")
 
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
 @export var shop_view: ShopView
-@export var player_energy_label: Label
-@export var enemy_energy_label: Label
+@export var player_energy_label: RichTextLabel
+@export var enemy_energy_label: RichTextLabel
 @export var end_turn_button: Button
-@export var result_label: Label
+@export var result_label: RichTextLabel
 
 var game: GameState
 var game_over: bool = false
@@ -23,10 +23,12 @@ func _ready() -> void:
 	player_bv.accepts_tile_drops = true
 	player_bv.tile_drop_requested.connect(_on_player_tile_drop_requested)
 	enemy_bv.setup(game.enemy_bs)
+
 	var tile_pool: Array[TileDefinition] = [
-		LAZY_TILE,
+		HEART_TILE,
 		SWORD_TILE
 	]
+
 	shop_view.setup(tile_pool, game.player_energy)
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
 	update_ui()
@@ -54,7 +56,7 @@ func _on_player_tile_drop_requested(idx: int, definition: TileDefinition, offer_
 func _on_player_cell_pressed(idx: int) -> void:
 	var pos: Array[int] = game.player_bs.idx_to_pos(idx)
 
-	if game.purchase_tile(game.player_bs, pos[0], pos[1], LAZY_TILE):
+	if game.purchase_tile(game.player_bs, pos[0], pos[1], HEART_TILE):
 		player_bv.refresh()
 		enemy_bv.refresh()
 		update_ui()
@@ -74,6 +76,7 @@ func _on_end_turn_pressed() -> void:
 
 	if check_game_over():
 		update_ui()
+
 		return
 
 	shop_view.refresh_offers(game.player_energy)
@@ -83,7 +86,7 @@ func _on_end_turn_pressed() -> void:
 func run_enemy_turn() -> void:
 	var empty_indices: Array[int] = game.enemy_bs.get_empty_indices()
 	var tile_idx: int = -1
-	var definition: TileDefinition = LAZY_TILE
+	var definition: TileDefinition = HEART_TILE
 
 	if game.enemy_energy >= SWORD_TILE.cost:
 		tile_idx = find_sword_target_idx(empty_indices)
@@ -91,13 +94,14 @@ func run_enemy_turn() -> void:
 		if tile_idx != -1:
 			definition = SWORD_TILE
 
-	if tile_idx == -1 and game.enemy_energy >= LAZY_TILE.cost:
+	if tile_idx == -1 and game.enemy_energy >= HEART_TILE.cost:
 		if not empty_indices.is_empty():
 			tile_idx = empty_indices.pick_random()
-			definition = LAZY_TILE
+			definition = HEART_TILE
 
 	if tile_idx != -1:
 		var pos: Array[int] = game.enemy_bs.idx_to_pos(tile_idx)
+
 		game.purchase_tile(
 			game.enemy_bs,
 			pos[0],
@@ -135,14 +139,17 @@ func check_game_over() -> bool:
 
 	if not player_alive and enemy_has_taken_turn and not enemy_alive:
 		finish_game("DRAW!")
+
 		return true
 
 	if not player_alive:
 		finish_game("DEFEAT!")
+
 		return true
 
 	if enemy_has_taken_turn and not enemy_alive:
 		finish_game("VICTORY!")
+
 		return true
 
 	return false

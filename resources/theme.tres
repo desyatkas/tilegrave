@@ -1,0 +1,86 @@
+[gd_resource type="Theme" format=3 uid="uid://dte3u6srlobrf"]
+
+[ext_resource type="Texture2D" uid="uid://ckiog2286dr1b" path="res://textures/panel.png" id="1_7ct1h"]
+[ext_resource type="FontFile" uid="uid://baqobmrpi8j7p" path="res://fonts/PressStart2P-Regular.ttf" id="1_d4nwg"]
+[ext_resource type="Texture2D" uid="uid://c6p15rfq2wuug" path="res://textures/button_normal.png" id="3_aaf3v"]
+[ext_resource type="Texture2D" uid="uid://benqqujmrns7x" path="res://textures/button_disabled.png" id="3_yp2uj"]
+[ext_resource type="Texture2D" uid="uid://dh4sb158acwch" path="res://textures/button_pressed.png" id="4_yp2uj"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_owntx"]
+texture = ExtResource("3_yp2uj")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_aaf3v"]
+load_path = "res://.godot/imported/button_hover.png-910719449f880ffa7e87a80c0effd249.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yp2uj"]
+texture = SubResource("CompressedTexture2D_aaf3v")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iojti"]
+texture = ExtResource("3_aaf3v")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_udp68"]
+texture = ExtResource("4_yp2uj")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b751m"]
+texture = ExtResource("1_7ct1h")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+
+[resource]
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(1, 1, 1, 0.5019608)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_outline_color = Color(0.09411765, 0.078431375, 0.14509805, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/fonts/font = ExtResource("1_d4nwg")
+Button/styles/disabled = SubResource("StyleBoxTexture_owntx")
+Button/styles/hover = SubResource("StyleBoxTexture_yp2uj")
+Button/styles/normal = SubResource("StyleBoxTexture_iojti")
+Button/styles/pressed = SubResource("StyleBoxTexture_udp68")
+GridContainer/constants/h_separation = 8
+GridContainer/constants/v_separation = 8
+Panel/styles/panel = SubResource("StyleBoxTexture_b751m")
+RichTextLabel/colors/default_color = Color(1, 1, 1, 1)
+RichTextLabel/colors/font_outline_color = Color(0.09411765, 0.078431375, 0.14509805, 1)
+RichTextLabel/constants/outline_size = 16
+RichTextLabel/fonts/normal_font = ExtResource("1_d4nwg")

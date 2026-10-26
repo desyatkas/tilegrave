@@ -1,6 +1,11 @@
 class_name BoardCell
 extends Button
 
+@export var cell_icon: TextureRect
+@export var tile_icon: TextureRect
+@export var hp_label: RichTextLabel
+@export var turns_until_destroyed_label: RichTextLabel
+
 var cell_idx: int = -1
 var board_view: BoardView
 

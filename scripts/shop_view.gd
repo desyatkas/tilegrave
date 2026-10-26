@@ -1,6 +1,8 @@
 class_name ShopView
 extends GridContainer
 
+const SHOP_OFFER_SCENE = preload("res://scenes/shop_offer.tscn")
+
 var tile_pool: Array[TileDefinition]
 var offers: Array[ShopOffer]
 
@@ -9,7 +11,8 @@ func setup(p_tile_pool: Array[TileDefinition], available_energy: int) -> void:
 	tile_pool = p_tile_pool
 
 	for idx in range(4):
-		var offer: ShopOffer = ShopOffer.new()
+		var offer: ShopOffer = SHOP_OFFER_SCENE.instantiate()
+
 		offer.setup(tile_pool.pick_random(), idx, available_energy)
 		add_child(offer)
 		offers.append(offer)

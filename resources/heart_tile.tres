@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://ctultqk1g1m4c"]
+
+[ext_resource type="Texture2D" uid="uid://bfbrs42m42vi0" path="res://textures/heart.png" id="1_7i0hy"]
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="2_batq3"]
+
+[resource]
+script = ExtResource("2_batq3")
+id = &"heart"
+icon = ExtResource("1_7i0hy")
+display_name = "Heart Tile"
+description = "Doesn't do anything, just a container for HP"
+max_hp = 4
+cost = 2
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"
