@@ -36,5 +36,18 @@ func setup(p_definition: TileDefinition, p_offer_index: int, available_energy: i
 
 
 func update_affordability(available_energy: int) -> void:
+	if definition == null:
+		affordable = false
+		disabled = true
+		return
+
 	affordable = definition.cost <= available_energy
 	disabled = not affordable
+
+
+func mark_sold_out() -> void:
+	definition = null
+	affordable = false
+	disabled = true
+	text = "SOLD OUT"
+	tooltip_text = ""

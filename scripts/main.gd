@@ -46,7 +46,7 @@ func _on_player_tile_drop_requested(idx: int, definition: TileDefinition, offer_
 	):
 		return
 
-	shop_view.refill_offer(offer_index, game.player_energy)
+	shop_view.consume_offer(offer_index)
 	player_bv.refresh()
 	update_ui()
 
@@ -67,6 +67,8 @@ func _on_end_turn_pressed() -> void:
 	game.resolve_abilities(game.player_bs)
 	game.player_bs.advance_turn()
 	game.regenerate_energy(game.player_bs)
+	run_enemy_turn()
+	enemy_has_taken_turn = true
 	player_bv.refresh()
 	enemy_bv.refresh()
 
@@ -74,11 +76,7 @@ func _on_end_turn_pressed() -> void:
 		update_ui()
 		return
 
-	run_enemy_turn()
-	enemy_has_taken_turn = true
-	player_bv.refresh()
-	enemy_bv.refresh()
-	check_game_over()
+	shop_view.refresh_offers(game.player_energy)
 	update_ui()
 
 

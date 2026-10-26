@@ -44,3 +44,18 @@ func ensure_affordable_offer(available_energy: int) -> void:
 
 	if not affordable_tiles.is_empty():
 		offers[0].setup(affordable_tiles.pick_random(), 0, available_energy)
+
+
+func consume_offer(idx: int) -> void:
+	if idx < 0 or idx >= offers.size():
+		return
+
+	offers[idx].mark_sold_out()
+
+
+func refresh_offers(available_energy: int) -> void:
+	for idx in range(offers.size()):
+		offers[idx].setup(tile_pool.pick_random(), idx, available_energy)
+
+	ensure_affordable_offer(available_energy)
+	update_energy(available_energy)
