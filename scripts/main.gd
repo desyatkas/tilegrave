@@ -10,8 +10,11 @@ const SWORD_TILE: TileDefinition = preload("res://resources/sword_tile.tres")
 @export var player_energy_label: Label
 @export var enemy_energy_label: Label
 @export var end_turn_button: Button
+@export var result_label: Label
 
 var game: GameState
+var game_over: bool = false
+var enemy_has_taken_turn: bool = false
 
 
 func _ready() -> void:
@@ -32,11 +35,14 @@ func _ready() -> void:
 func _on_player_tile_drop_requested(idx: int, definition: TileDefinition, offer_index: int) -> void:
 	var pos: Array[int] = game.player_bs.idx_to_pos(idx)
 
-	if not game.purchase_tile(
-			game.player_bs,
-			pos[0],
-			pos[1],
-			definition
+	if (
+			game_over
+			or not game.purchase_tile(
+					game.player_bs,
+					pos[0],
+					pos[1],
+					definition
+			)
 	):
 		return
 
@@ -55,12 +61,24 @@ func _on_player_cell_pressed(idx: int) -> void:
 
 
 func _on_end_turn_pressed() -> void:
+	if game_over:
+		return
+
 	game.resolve_abilities(game.player_bs)
 	game.player_bs.advance_turn()
 	game.regenerate_energy(game.player_bs)
-	run_enemy_turn()
 	player_bv.refresh()
 	enemy_bv.refresh()
+
+	if check_game_over():
+		update_ui()
+		return
+
+	run_enemy_turn()
+	enemy_has_taken_turn = true
+	player_bv.refresh()
+	enemy_bv.refresh()
+	check_game_over()
 	update_ui()
 
 
@@ -111,6 +129,34 @@ func find_sword_target_idx(empty_indices: Array[int]) -> int:
 			return idx
 
 	return -1
+
+
+func check_game_over() -> bool:
+	var player_alive: bool = not game.player_bs.get_alive_indices().is_empty()
+	var enemy_alive: bool = not game.enemy_bs.get_alive_indices().is_empty()
+
+	if not player_alive and enemy_has_taken_turn and not enemy_alive:
+		finish_game("DRAW!")
+		return true
+
+	if not player_alive:
+		finish_game("DEFEAT!")
+		return true
+
+	if enemy_has_taken_turn and not enemy_alive:
+		finish_game("VICTORY!")
+		return true
+
+	return false
+
+
+func finish_game(result: String) -> void:
+	game_over = true
+	result_label.text = result
+	result_label.visible = true
+	end_turn_button.disabled = true
+	shop_view.visible = false
+	player_bv.accepts_tile_drops = false
 
 
 func update_ui() -> void:
