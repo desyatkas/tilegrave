@@ -2,13 +2,19 @@ class_name TileState
 extends RefCounted
 
 var definition: TileDefinition
+var max_hp: int
 var hp: int
 var turns_until_destroyed: int = -1
 
 
 func _init(p_definition: TileDefinition) -> void:
 	definition = p_definition
-	hp = definition.max_hp
+	max_hp = definition.max_hp
+	hp = max_hp
+
+
+func heal(amount: int) -> void:
+	hp = mini(max_hp, hp + amount)
 
 
 func take_damage(amount: int) -> void:
