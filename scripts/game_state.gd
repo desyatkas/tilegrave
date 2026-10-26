@@ -20,6 +20,7 @@ func _resolve_sword(bs: BoardState, idx: int) -> void:
 		return
 
 	var attacker: TileState = bs.cells[idx]
+
 	target.take_damage(attacker.definition.ability_power)
 
 
