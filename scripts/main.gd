@@ -11,12 +11,16 @@ const V_MIRROR_TILE: TileDefinition = preload("res://resources/vertical_mirror_t
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
 @export var shop_view: ShopView
+@export var player_hp_label: RichTextLabel
 @export var player_energy_label: RichTextLabel
+@export var enemy_hp_label: RichTextLabel
 @export var enemy_energy_label: RichTextLabel
+@export var turns_label: RichTextLabel
 @export var end_turn_button: Button
 @export var result_label: RichTextLabel
 
 var game: GameState
+var turns: int = 0
 var game_over: bool = false
 var enemy_has_taken_turn: bool = false
 
@@ -73,6 +77,8 @@ func _on_player_cell_pressed(idx: int) -> void:
 func _on_end_turn_pressed() -> void:
 	if game_over:
 		return
+
+	turns += 1
 
 	game.resolve_abilities(game.player_bs)
 	game.player_bs.advance_turn()
@@ -195,7 +201,23 @@ func finish_game(result: String) -> void:
 
 
 func update_ui() -> void:
-	player_energy_label.text = "Energy: %d/%d" % [game.player_energy, game.max_player_energy]
-	enemy_energy_label.text = "Energy: %d/%d" % [game.enemy_energy, game.max_enemy_energy]
+	var player_hp: int = 0
+	var player_max_hp: int = 0
+	var enemy_hp: int = 0
+	var enemy_max_hp: int = 0
+
+	for idx in player_bv.board_state.get_alive_indices():
+		player_hp += player_bv.board_state.cells[idx].hp
+		player_max_hp += player_bv.board_state.cells[idx].max_hp
+
+	for idx in enemy_bv.board_state.get_alive_indices():
+		enemy_hp += enemy_bv.board_state.cells[idx].hp
+		enemy_max_hp += enemy_bv.board_state.cells[idx].max_hp
+
+	player_hp_label.text = "HP: %d/%d" % [player_hp, player_max_hp]
+	player_energy_label.text = "Energy: %d/%d" % [game.player_energy, game.player_max_energy]
+	enemy_hp_label.text = "HP: %d/%d" % [enemy_hp, enemy_max_hp]
+	enemy_energy_label.text = "Energy: %d/%d" % [game.enemy_energy, game.enemy_max_energy]
 	player_bv.available_energy = game.player_energy
+	turns_label.text = "Turns: %d" % turns
 	shop_view.update_energy(game.player_energy)

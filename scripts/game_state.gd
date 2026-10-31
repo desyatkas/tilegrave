@@ -5,10 +5,10 @@ const HEART_TILE: TileDefinition = preload("res://resources/heart_tile.tres")
 
 var player_bs: BoardState
 var enemy_bs: BoardState
-var max_player_energy: int = 16
-var max_enemy_energy: int = 16
 var player_energy: int = 8
+var player_max_energy: int = 16
 var enemy_energy: int = 8
+var enemy_max_energy: int = 16
 
 
 func _init() -> void:
@@ -162,9 +162,9 @@ func regenerate_energy(board: BoardState) -> void:
 	var energy_gain: int = board.get_alive_indices().size()
 
 	if board == player_bs:
-		player_energy = mini(player_energy + energy_gain, max_player_energy)
+		player_energy = mini(player_energy + energy_gain, player_max_energy)
 	elif board == enemy_bs:
-		enemy_energy = mini(enemy_energy + energy_gain, max_enemy_energy)
+		enemy_energy = mini(enemy_energy + energy_gain, enemy_max_energy)
 
 
 func resolve_abilities(bs: BoardState) -> void:
