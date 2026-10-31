@@ -79,7 +79,11 @@ func _resolve_shield(bs: BoardState, idx: int) -> void:
 			neighbor_pos.y
 		)
 
-		if neighbor == null or not neighbor.is_alive():
+		if (
+				neighbor == null
+				or neighbor.definition.id == &"shield"
+				or not neighbor.is_alive()
+		):
 			continue
 
 		neighbor.hp = mini(neighbor.max_hp, maxi(neighbor.hp, 2))
