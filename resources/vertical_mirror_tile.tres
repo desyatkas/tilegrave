@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://btlc70niuvrjn"]
+
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_r0aqa"]
+[ext_resource type="Texture2D" uid="uid://dkdgl2xybeffi" path="res://textures/vertical_mirror.png" id="1_tv6vd"]
+
+[resource]
+script = ExtResource("1_r0aqa")
+id = &"v_mirror"
+icon = ExtResource("1_tv6vd")
+display_name = "Vertical Mirror Tile"
+description = "Clones the tile from the top cell
+(if one exists) and puts the
+clone onto the bottom cell (if
+empty)"
+max_hp = 3
+cost = 9
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

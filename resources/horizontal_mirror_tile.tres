@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://bsneek7ojiuee"]
+
+[ext_resource type="Texture2D" uid="uid://yvaaix7kxhrb" path="res://textures/horizontal_mirror.png" id="1_e7vi1"]
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_oe135"]
+
+[resource]
+script = ExtResource("1_oe135")
+id = &"h_mirror"
+icon = ExtResource("1_e7vi1")
+display_name = "Horizontal Mirror Tile"
+description = "Clones the tile from the left cell
+(if one exists) and puts the
+clone onto the right cell (if
+empty)"
+max_hp = 3
+cost = 9
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

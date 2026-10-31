@@ -85,6 +85,50 @@ func _resolve_shield(bs: BoardState, idx: int) -> void:
 		neighbor.hp = mini(neighbor.max_hp, maxi(neighbor.hp, 2))
 
 
+func _resolve_mirror(bs: BoardState, idx: int) -> void:
+	var pos: Array[int] = bs.idx_to_pos(idx)
+	var x: int = pos[0]
+	var y: int = pos[1]
+	var source: Vector2i
+	var target: Vector2i
+
+	match bs.get_tile(x, y).definition.id:
+		&"h_mirror":
+			source = Vector2i(x - 1, y)
+			target = Vector2i(x + 1, y)
+		&"v_mirror":
+			source = Vector2i(x, y - 1)
+			target = Vector2i(x, y + 1)
+		_:
+			return
+
+	if (
+			source.x < 0
+			or source.x >= 4
+			or source.y < 0
+			or source.y >= 4
+			or target.x < 0
+			or target.x >= 4
+			or target.y < 0
+			or target.y >= 4
+	):
+		return
+
+	var source_tile: TileState = bs.get_tile(source.x, source.y)
+
+	if source_tile == null:
+		return
+
+	if bs.get_tile(target.x, target.y) != null:
+		return
+
+	var target_tile: TileState = TileState.new(source_tile.definition) if source_tile else null
+
+	target_tile.hp = source_tile.hp
+	target_tile.turns_until_destroyed = source_tile.turns_until_destroyed
+	bs.set_tile(target.x, target.y, target_tile)
+
+
 func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition) -> bool:
 	if (
 			(board != player_bs and board != enemy_bs)
@@ -133,3 +177,5 @@ func resolve_abilities(bs: BoardState) -> void:
 				_resolve_medkit(bs)
 			&"shield":
 				_resolve_shield(bs, idx)
+			&"h_mirror", &"v_mirror":
+				_resolve_mirror(bs, idx)
