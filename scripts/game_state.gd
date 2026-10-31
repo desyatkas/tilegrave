@@ -14,9 +14,16 @@ var enemy_energy: int = 8
 func _init() -> void:
 	player_bs = BoardState.new()
 	enemy_bs = BoardState.new()
-
-	player_bs.set_tile(randi_range(0, 3), randi_range(0, 3), TileState.new(HEART_TILE))
-	enemy_bs.set_tile(randi_range(0, 3), randi_range(0, 3), TileState.new(HEART_TILE))
+	player_bs.set_tile(
+			randi_range(0, 3),
+			randi_range(0, 3),
+			TileState.new(HEART_TILE)
+	)
+	enemy_bs.set_tile(
+			randi_range(0, 3),
+			randi_range(0, 3),
+			TileState.new(HEART_TILE)
+	)
 
 
 func _resolve_sword(bs: BoardState, idx: int) -> void:
