@@ -19,9 +19,25 @@ func _resolve_sword(bs: BoardState, idx: int) -> void:
 	if target == null:
 		return
 
-	var attacker: TileState = bs.cells[idx]
+	target.take_damage(1)
 
-	target.take_damage(attacker.definition.ability_power)
+
+func _resolve_medkit(bs: BoardState) -> void:
+	var pool: Array[TileState] = []
+
+	for idx in bs.get_alive_indices():
+		if (
+				bs.cells[idx].hp < bs.cells[idx].max_hp
+				and bs.cells[idx].definition.id != &"medkit"
+		):
+			pool.append(bs.cells[idx])
+
+	if pool.is_empty():
+		return
+
+	var target: TileState = pool.pick_random()
+
+	target.heal(1)
 
 
 func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition) -> bool:
@@ -65,6 +81,8 @@ func resolve_abilities(bs: BoardState) -> void:
 	for idx in bs.get_alive_indices():
 		var tile: TileState = bs.cells[idx]
 
-		match tile.definition.ability_id:
+		match tile.definition.id:
 			&"sword":
 				_resolve_sword(bs, idx)
+			&"medkit":
+				_resolve_medkit(bs)

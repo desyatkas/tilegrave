@@ -3,6 +3,7 @@ extends Control
 
 const HEART_TILE: TileDefinition = preload("res://resources/heart_tile.tres")
 const SWORD_TILE: TileDefinition = preload("res://resources/sword_tile.tres")
+const MEDKIT_TILE: TileDefinition = preload("res://resources/medkit_tile.tres")
 
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
@@ -26,7 +27,8 @@ func _ready() -> void:
 
 	var tile_pool: Array[TileDefinition] = [
 		HEART_TILE,
-		SWORD_TILE
+		SWORD_TILE,
+		MEDKIT_TILE
 	]
 
 	shop_view.setup(tile_pool, game.player_energy)
@@ -94,10 +96,14 @@ func run_enemy_turn() -> void:
 		if tile_idx != -1:
 			definition = SWORD_TILE
 
-	if tile_idx == -1 and game.enemy_energy >= HEART_TILE.cost:
+	if tile_idx == -1:
 		if not empty_indices.is_empty():
 			tile_idx = empty_indices.pick_random()
-			definition = HEART_TILE
+
+			if game.enemy_energy >= MEDKIT_TILE.cost:
+				definition = MEDKIT_TILE
+			elif game.enemy_energy >= HEART_TILE.cost:
+				definition = HEART_TILE
 
 	if tile_idx != -1:
 		var pos: Array[int] = game.enemy_bs.idx_to_pos(tile_idx)
@@ -121,7 +127,7 @@ func find_sword_target_idx(empty_indices: Array[int]) -> int:
 		if target == null or not target.is_alive():
 			continue
 
-		if target.definition.ability_id == &"sword":
+		if target.definition.id == &"sword":
 			return idx
 
 	for idx in empty_indices:

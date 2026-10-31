@@ -7,5 +7,3 @@ extends Resource
 @export_multiline var description: String
 @export var max_hp: int
 @export var cost: int
-@export var ability_id: StringName
-@export var ability_power: int

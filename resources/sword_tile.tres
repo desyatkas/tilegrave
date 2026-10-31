@@ -11,6 +11,4 @@ display_name = "Sword Tile"
 description = "Deals damage to the enemy tile in the same cell after each turn"
 max_hp = 2
 cost = 6
-ability_id = &"sword"
-ability_power = 1
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"
