@@ -48,14 +48,14 @@ func refresh() -> void:
 			b_cell.turns_until_destroyed_label.text = ""
 		else:
 			if tile.is_alive():
-				b_cell.tooltip_text = "%s\n%d/%d HP\n\n%s" % [
+				b_cell.tooltip_text = "%s - %d/%d HP\n\n%s" % [
 					tile.definition.display_name,
 					tile.hp,
 					tile.max_hp,
 					tile.definition.description
 				]
 			else:
-				b_cell.tooltip_text = "%s\nDEAD - %d turns left until destroying\n\n%s" % [
+				b_cell.tooltip_text = "%s - DEAD\n\n%d turns left until destroying\n\n%s" % [
 					tile.definition.display_name,
 					tile.turns_until_destroyed,
 					tile.definition.description
@@ -63,7 +63,7 @@ func refresh() -> void:
 				b_cell.cell_icon.modulate = Color.WHITE.darkened(0.5)
 
 			b_cell.tile_icon.texture = tile.definition.icon
-			b_cell.hp_label.text = "%d/%d" % [tile.hp, tile.max_hp]
+			b_cell.hp_label.text = str(tile.hp)
 			b_cell.turns_until_destroyed_label.text = str(tile.turns_until_destroyed) if tile.is_dead() else ""
 
 

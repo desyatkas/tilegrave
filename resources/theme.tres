@@ -90,7 +90,6 @@ GridContainer/constants/v_separation = 8
 Panel/styles/panel = SubResource("StyleBoxTexture_b751m")
 RichTextLabel/colors/default_color = Color(1, 1, 1, 1)
 RichTextLabel/colors/font_outline_color = Color(0.09411765, 0.078431375, 0.14509805, 1)
-RichTextLabel/constants/outline_size = 16
 RichTextLabel/fonts/normal_font = ExtResource("1_d4nwg")
 TooltipLabel/colors/font_color = Color(1, 1, 1, 1)
 TooltipLabel/colors/font_outline_color = Color(0.09411765, 0.078431375, 0.14509805, 1)

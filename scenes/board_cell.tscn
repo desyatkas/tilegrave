@@ -2,6 +2,8 @@
 
 [ext_resource type="Theme" uid="uid://dte3u6srlobrf" path="res://resources/theme.tres" id="1_a5naf"]
 [ext_resource type="Script" uid="uid://dt7qp0ji1ptme" path="res://scripts/board_cell.gd" id="1_b2452"]
+[ext_resource type="Texture2D" uid="uid://dfn3hv00kn03t" path="res://textures/board_cell.png" id="3_ked58"]
+[ext_resource type="Texture2D" uid="uid://bfbrs42m42vi0" path="res://textures/heart.png" id="4_wvn1a"]
 
 [node name="BoardCell" type="Button" unique_id=1613266187 node_paths=PackedStringArray("cell_icon", "tile_icon", "hp_label", "turns_until_destroyed_label")]
 offset_right = 112.0
@@ -24,6 +26,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+texture = ExtResource("3_ked58")
 stretch_mode = 5
 
 [node name="TileIcon" type="TextureRect" parent="CellIcon" unique_id=1184455501]
@@ -34,15 +37,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+texture = ExtResource("4_wvn1a")
 stretch_mode = 5
 
 [node name="HPLabel" type="RichTextLabel" parent="CellIcon" unique_id=1220912700]
 layout_mode = 1
-offset_right = 64.0
-offset_bottom = 32.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_colors/default_color = Color(0.89411765, 0.23137255, 0.26666668, 1)
+theme_override_font_sizes/normal_font_size = 32
+text = "99"
 
 [node name="TurnsUntilDestroyedLabel" type="RichTextLabel" parent="." unique_id=430219987]
 layout_mode = 1

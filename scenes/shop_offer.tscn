@@ -2,6 +2,8 @@
 
 [ext_resource type="Theme" uid="uid://dte3u6srlobrf" path="res://resources/theme.tres" id="1_bfo6h"]
 [ext_resource type="Script" uid="uid://ccc14rc8jcjyv" path="res://scripts/shop_offer.gd" id="1_ogbwv"]
+[ext_resource type="Texture2D" uid="uid://dfn3hv00kn03t" path="res://textures/board_cell.png" id="3_i507k"]
+[ext_resource type="Texture2D" uid="uid://bfbrs42m42vi0" path="res://textures/heart.png" id="4_yno8c"]
 
 [node name="ShopOffer" type="Button" unique_id=1149802112 node_paths=PackedStringArray("board_cell_icon", "offer_icon", "cost_label")]
 offset_right = 112.0
@@ -23,6 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+texture = ExtResource("3_i507k")
 stretch_mode = 5
 
 [node name="OfferIcon" type="TextureRect" parent="." unique_id=1492375624]
@@ -33,23 +36,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+texture = ExtResource("4_yno8c")
 stretch_mode = 5
 
 [node name="CostLabel" type="RichTextLabel" parent="." unique_id=1167178629]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -16.0
-offset_top = -16.0
-offset_right = 16.0
-offset_bottom = 16.0
-grow_horizontal = 0
-grow_vertical = 0
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.99607843, 0.90588236, 0.38039216, 1)
 theme_override_font_sizes/normal_font_size = 32
-horizontal_alignment = 1
-vertical_alignment = 1
+text = "99"
+horizontal_alignment = 2
+vertical_alignment = 2
