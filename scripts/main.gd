@@ -4,6 +4,7 @@ extends Control
 const HEART_TILE: TileDefinition = preload("res://resources/heart_tile.tres")
 const SWORD_TILE: TileDefinition = preload("res://resources/sword_tile.tres")
 const MEDKIT_TILE: TileDefinition = preload("res://resources/medkit_tile.tres")
+const SHIELD_TILE: TileDefinition = preload("res://resources/shield_tile.tres")
 
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
@@ -28,7 +29,8 @@ func _ready() -> void:
 	var tile_pool: Array[TileDefinition] = [
 		HEART_TILE,
 		SWORD_TILE,
-		MEDKIT_TILE
+		MEDKIT_TILE,
+		SHIELD_TILE,
 	]
 
 	shop_view.setup(tile_pool, game.player_energy)

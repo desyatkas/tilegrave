@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://yh2fabnw340w"]
+
+[ext_resource type="Texture2D" uid="uid://lst11wg6gccs" path="res://textures/shield.png" id="1_k2kuc"]
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="2_5yvgr"]
+
+[resource]
+script = ExtResource("2_5yvgr")
+id = &"shield"
+icon = ExtResource("1_k2kuc")
+display_name = "Shield Tile"
+description = "Prevents neighbor tiles (top, left, bottom, right) from dying"
+max_hp = 4
+cost = 8
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

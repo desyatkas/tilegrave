@@ -47,6 +47,37 @@ func _resolve_medkit(bs: BoardState) -> void:
 	target.heal(1)
 
 
+func _resolve_shield(bs: BoardState, idx: int) -> void:
+	var pos: Array[int] = bs.idx_to_pos(idx)
+	var x: int = pos[0]
+	var y: int = pos[1]
+	var neighbors: Array[Vector2i] = [
+		Vector2i(x, y - 1),
+		Vector2i(x - 1, y),
+		Vector2i(x, y + 1),
+		Vector2i(x + 1, y),
+	]
+
+	for neighbor_pos in neighbors:
+		if (
+				neighbor_pos.x < 0
+				or neighbor_pos.x >= 4
+				or neighbor_pos.y < 0
+				or neighbor_pos.y >= 4
+		):
+			continue
+
+		var neighbor: TileState = bs.get_tile(
+			neighbor_pos.x,
+			neighbor_pos.y
+		)
+
+		if neighbor == null or not neighbor.is_alive():
+			continue
+
+		neighbor.hp = mini(neighbor.max_hp, maxi(neighbor.hp, 2))
+
+
 func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition) -> bool:
 	if (
 			(board != player_bs and board != enemy_bs)
@@ -93,3 +124,5 @@ func resolve_abilities(bs: BoardState) -> void:
 				_resolve_sword(bs, idx)
 			&"medkit":
 				_resolve_medkit(bs)
+			&"shield":
+				_resolve_shield(bs, idx)
