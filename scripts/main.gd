@@ -102,14 +102,22 @@ func run_enemy_turn() -> void:
 		if tile_idx != -1:
 			definition = SWORD_TILE
 
-	if tile_idx == -1:
-		if not empty_indices.is_empty():
-			tile_idx = empty_indices.pick_random()
+	if (
+			tile_idx == -1
+			and game.enemy_energy >= MEDKIT_TILE.cost
+			and has_damaged_enemy_tile()
+			and not empty_indices.is_empty()
+	):
+		tile_idx = empty_indices.pick_random()
+		definition = MEDKIT_TILE
 
-			if game.enemy_energy >= MEDKIT_TILE.cost:
-				definition = MEDKIT_TILE if randi_range(0, 1) else HEART_TILE
-			elif game.enemy_energy >= HEART_TILE.cost:
-				definition = HEART_TILE
+	if (
+			tile_idx == -1
+			and game.enemy_energy >= HEART_TILE.cost
+			and not empty_indices.is_empty()
+	):
+		tile_idx = empty_indices.pick_random()
+		definition = HEART_TILE
 
 	if tile_idx != -1:
 		var pos: Array[int] = game.enemy_bs.idx_to_pos(tile_idx)
@@ -143,6 +151,16 @@ func find_sword_target_idx(empty_indices: Array[int]) -> int:
 			return idx
 
 	return -1
+
+
+func has_damaged_enemy_tile() -> bool:
+	for idx in game.enemy_bs.get_alive_indices():
+		var tile: TileState = game.enemy_bs.cells[idx]
+
+		if tile.hp < tile.max_hp and tile.definition.id != &"medkit":
+			return true
+
+	return false
 
 
 func check_game_over() -> bool:
