@@ -1,8 +1,12 @@
 class_name GameState
 extends RefCounted
 
+const HEART_TILE: TileDefinition = preload("res://resources/heart_tile.tres")
+
 var player_bs: BoardState
 var enemy_bs: BoardState
+var max_player_energy: int = 16
+var max_enemy_energy: int = 16
 var player_energy: int = 8
 var enemy_energy: int = 8
 
@@ -10,6 +14,9 @@ var enemy_energy: int = 8
 func _init() -> void:
 	player_bs = BoardState.new()
 	enemy_bs = BoardState.new()
+
+	player_bs.set_tile(randi_range(0, 3), randi_range(0, 3), TileState.new(HEART_TILE))
+	enemy_bs.set_tile(randi_range(0, 3), randi_range(0, 3), TileState.new(HEART_TILE))
 
 
 func _resolve_sword(bs: BoardState, idx: int) -> void:
@@ -69,9 +76,9 @@ func regenerate_energy(board: BoardState) -> void:
 	var energy_gain: int = board.get_alive_indices().size()
 
 	if board == player_bs:
-		player_energy += energy_gain
+		player_energy = mini(player_energy + energy_gain, max_player_energy)
 	elif board == enemy_bs:
-		enemy_energy += energy_gain
+		enemy_energy = mini(enemy_energy + energy_gain, max_enemy_energy)
 
 
 func resolve_abilities(bs: BoardState) -> void:

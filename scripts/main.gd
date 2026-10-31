@@ -171,7 +171,7 @@ func finish_game(result: String) -> void:
 
 
 func update_ui() -> void:
-	player_energy_label.text = "Energy: %d" % game.player_energy
-	enemy_energy_label.text = "Energy: %d" % game.enemy_energy
+	player_energy_label.text = "Energy: %d/%d" % [game.player_energy, game.max_player_energy]
+	enemy_energy_label.text = "Energy: %d/%d" % [game.enemy_energy, game.max_enemy_energy]
 	player_bv.available_energy = game.player_energy
 	shop_view.update_energy(game.player_energy)
