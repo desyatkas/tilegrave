@@ -101,7 +101,7 @@ func run_enemy_turn() -> void:
 			tile_idx = empty_indices.pick_random()
 
 			if game.enemy_energy >= MEDKIT_TILE.cost:
-				definition = MEDKIT_TILE
+				definition = MEDKIT_TILE if randi_range(0, 1) else HEART_TILE
 			elif game.enemy_energy >= HEART_TILE.cost:
 				definition = HEART_TILE
 
