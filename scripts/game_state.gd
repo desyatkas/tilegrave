@@ -36,15 +36,15 @@ func _resolve_sword(bs: BoardState, idx: int) -> void:
 	target.take_damage(1)
 
 
-func _resolve_medkit(bs: BoardState) -> void:
+func _resolve_medkit(bs: BoardState, idx: int) -> void:
 	var pool: Array[TileState] = []
 
-	for idx in bs.get_alive_indices():
+	for i in bs.get_alive_indices():
 		if (
-				bs.cells[idx].hp < bs.cells[idx].max_hp
-				and bs.cells[idx].definition.id != &"medkit"
+				bs.cells[i].hp < bs.cells[i].max_hp
+				and bs.cells[i].definition.id != &"medkit"
 		):
-			pool.append(bs.cells[idx])
+			pool.append(bs.cells[i])
 
 	if pool.is_empty():
 		return
@@ -52,6 +52,7 @@ func _resolve_medkit(bs: BoardState) -> void:
 	var target: TileState = pool.pick_random()
 
 	target.heal(1)
+	bs.cells[idx].take_damage(1)
 
 
 func _resolve_shield(bs: BoardState, idx: int) -> void:
@@ -178,7 +179,7 @@ func resolve_abilities(bs: BoardState) -> void:
 			&"sword":
 				_resolve_sword(bs, idx)
 			&"medkit":
-				_resolve_medkit(bs)
+				_resolve_medkit(bs, idx)
 			&"shield":
 				_resolve_shield(bs, idx)
 			&"h_mirror", &"v_mirror":
