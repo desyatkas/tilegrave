@@ -114,6 +114,33 @@ func run_enemy_turn() -> void:
 
 	if (
 			tile_idx == -1
+			and not empty_indices.is_empty()
+	):
+		if game.enemy_energy >= H_MIRROR_TILE.cost:
+			var h_idx: int = find_best_mirror_idx(
+				empty_indices,
+				&"h_mirror"
+			)
+
+			if h_idx != -1:
+				tile_idx = h_idx
+				definition = H_MIRROR_TILE
+
+		if (
+			tile_idx == -1
+			and game.enemy_energy >= V_MIRROR_TILE.cost
+		):
+			var v_idx: int = find_best_mirror_idx(
+				empty_indices,
+				&"v_mirror"
+			)
+
+			if v_idx != -1:
+				tile_idx = v_idx
+				definition = V_MIRROR_TILE
+
+	if (
+			tile_idx == -1
 			and game.enemy_energy >= SWORD_TILE.cost
 			and not empty_indices.is_empty()
 	):
@@ -216,6 +243,78 @@ func find_best_shield_idx(empty_indices: Array[int]) -> int:
 			best_idx = idx
 
 	return best_idx
+
+
+func find_best_mirror_idx(empty_indices: Array[int], mirror_id: StringName) -> int:
+	var best_idx: int = -1
+	var best_score: int = 0
+
+	for idx in empty_indices:
+		var pos: Array[int] = game.enemy_bs.idx_to_pos(idx)
+		var x: int = pos[0]
+		var y: int = pos[1]
+		var source: Vector2i
+		var target: Vector2i
+
+		match mirror_id:
+			&"h_mirror":
+				source = Vector2i(x - 1, y)
+				target = Vector2i(x + 1, y)
+			&"v_mirror":
+				source = Vector2i(x, y - 1)
+				target = Vector2i(x, y + 1)
+			_:
+				return -1
+
+		if (
+				source.x < 0
+				or source.x >= 4
+				or source.y < 0
+				or source.y >= 4
+				or target.x < 0
+				or target.x >= 4
+				or target.y < 0
+				or target.y >= 4
+		):
+			continue
+
+		var source_tile: TileState = game.enemy_bs.get_tile(
+			source.x,
+			source.y
+		)
+		var target_tile: TileState = game.enemy_bs.get_tile(
+			target.x,
+			target.y
+		)
+
+		if (
+				source_tile == null
+				or source_tile.is_dead()
+				or target_tile != null
+		):
+			continue
+
+		var score: int = get_mirror_tile_score(source_tile)
+
+		if score > best_score:
+			best_score = score
+			best_idx = idx
+
+	return best_idx
+
+
+func get_mirror_tile_score(tile: TileState) -> int:
+	match tile.definition.id:
+		&"sword":
+			return 5
+		&"shield":
+			return 4
+		&"medkit":
+			return 3
+		&"heart":
+			return 2
+		_:
+			return 0
 
 
 func has_damaged_enemy_tile() -> bool:
