@@ -5,6 +5,7 @@ var definition: TileDefinition
 var max_hp: int
 var hp: int
 var turns_until_destroyed: int = -1
+var just_died: bool = false
 
 
 func _init(p_definition: TileDefinition) -> void:
@@ -25,10 +26,16 @@ func take_damage(amount: int) -> void:
 
 	if is_dead():
 		turns_until_destroyed = 4
+		just_died = true
 
 
 func advance_turn() -> void:
 	if is_alive():
+		return
+
+	if just_died:
+		just_died = false
+
 		return
 
 	if turns_until_destroyed > 0:
