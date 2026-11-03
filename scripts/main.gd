@@ -214,9 +214,9 @@ func update_ui() -> void:
 		enemy_hp += enemy_bv.board_state.cells[idx].hp
 		enemy_max_hp += enemy_bv.board_state.cells[idx].max_hp
 
-	player_hp_label.text = "HP: %d/%d" % [player_hp, player_max_hp]
+	player_hp_label.text = "Health: %d/%d" % [player_hp, player_max_hp]
 	player_energy_label.text = "Energy: %d/%d" % [game.player_energy, game.player_max_energy]
-	enemy_hp_label.text = "HP: %d/%d" % [enemy_hp, enemy_max_hp]
+	enemy_hp_label.text = "Health: %d/%d" % [enemy_hp, enemy_max_hp]
 	enemy_energy_label.text = "Energy: %d/%d" % [game.enemy_energy, game.enemy_max_energy]
 	player_bv.available_energy = game.player_energy
 	turns_label.text = "Turns: %d" % turns
