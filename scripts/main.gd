@@ -287,11 +287,7 @@ func find_best_mirror_idx(empty_indices: Array[int], mirror_id: StringName) -> i
 			target.y
 		)
 
-		if (
-				source_tile == null
-				or source_tile.is_dead()
-				or target_tile != null
-		):
+		if source_tile == null or target_tile != null:
 			continue
 
 		var score: int = get_mirror_tile_score(source_tile)
