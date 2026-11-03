@@ -11,7 +11,7 @@ display_name = "Vertical Mirror Tile"
 description = "Clones the tile from the top cell
 (if one exists) and puts the
 clone onto the bottom cell (if
-empty)"
+empty)."
 max_hp = 3
 cost = 9
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

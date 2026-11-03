@@ -9,7 +9,7 @@ id = &"heart"
 icon = ExtResource("1_7i0hy")
 display_name = "Heart Tile"
 description = "Doesn't do anything, just a
-container for HP"
+container for health."
 max_hp = 4
 cost = 2
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

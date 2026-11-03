@@ -9,7 +9,7 @@ id = &"sword"
 icon = ExtResource("1_y2oey")
 display_name = "Sword Tile"
 description = "Deals damage to the enemy
-tile in the same cell"
+tile in the same cell."
 max_hp = 2
 cost = 6
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"
