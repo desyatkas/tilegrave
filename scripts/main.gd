@@ -143,6 +143,16 @@ func run_enemy_turn() -> void:
 
 	if (
 			tile_idx == -1
+			and game.enemy_energy >= BOMB_TILE.cost
+			and not empty_indices.is_empty()
+	):
+		tile_idx = find_best_bomb_idx(empty_indices)
+
+		if tile_idx != -1:
+			definition = BOMB_TILE
+
+	if (
+			tile_idx == -1
 			and game.enemy_energy >= SWORD_TILE.cost
 			and not empty_indices.is_empty()
 	):
@@ -313,6 +323,50 @@ func get_mirror_tile_score(tile: TileState) -> int:
 			return 2
 		_:
 			return 0
+
+
+func find_best_bomb_idx(empty_indices: Array[int]) -> int:
+	var best_idx: int = -1
+	var best_score: int = 1
+
+	for idx in empty_indices:
+		var pos: Array[int] = game.player_bs.idx_to_pos(idx)
+		var x: int = pos[0]
+		var y: int = pos[1]
+		var neighbors: Array[Vector2i] = [
+			Vector2i(x, y - 1),
+			Vector2i(x - 1, y),
+			Vector2i(x, y + 1),
+			Vector2i(x + 1, y),
+		]
+		var score: int = 0
+		var target: TileState = game.player_bs.get_tile(x, y)
+
+		if target != null and target.is_alive():
+			score += 1
+
+		for neighbor_pos in neighbors:
+			if (
+					neighbor_pos.x < 0
+					or neighbor_pos.x >= 4
+					or neighbor_pos.y < 0
+					or neighbor_pos.y >= 4
+			):
+				continue
+
+			var neighbor: TileState = game.player_bs.get_tile(
+				neighbor_pos.x,
+				neighbor_pos.y
+			)
+
+			if neighbor != null and neighbor.is_alive():
+				score += 1
+
+		if score > best_score:
+			best_score = score
+			best_idx = idx
+
+	return best_idx
 
 
 func has_damaged_enemy_tile() -> bool:
