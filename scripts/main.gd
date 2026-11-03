@@ -102,7 +102,21 @@ func run_enemy_turn() -> void:
 	var tile_idx: int = -1
 	var definition: TileDefinition = HEART_TILE
 
-	if game.enemy_energy >= SWORD_TILE.cost:
+	if (
+			tile_idx == -1
+			and game.enemy_energy >= SHIELD_TILE.cost
+			and not empty_indices.is_empty()
+	):
+		tile_idx = find_best_shield_idx(empty_indices)
+
+		if tile_idx != -1:
+			definition = SHIELD_TILE
+
+	if (
+			tile_idx == -1
+			and game.enemy_energy >= SWORD_TILE.cost
+			and not empty_indices.is_empty()
+	):
 		tile_idx = find_sword_target_idx(empty_indices)
 
 		if tile_idx != -1:
@@ -157,6 +171,51 @@ func find_sword_target_idx(empty_indices: Array[int]) -> int:
 			return idx
 
 	return -1
+
+
+func find_best_shield_idx(empty_indices: Array[int]) -> int:
+	var best_idx: int = -1
+	var best_score: int = 0
+
+	for idx in empty_indices:
+		var pos: Array[int] = game.enemy_bs.idx_to_pos(idx)
+		var x: int = pos[0]
+		var y: int = pos[1]
+		var neighbors: Array[Vector2i] = [
+			Vector2i(x, y - 1),
+			Vector2i(x - 1, y),
+			Vector2i(x, y + 1),
+			Vector2i(x + 1, y),
+		]
+		var score: int = 0
+
+		for neighbor_pos in neighbors:
+			if (
+					neighbor_pos.x < 0
+					or neighbor_pos.x >= 4
+					or neighbor_pos.y < 0
+					or neighbor_pos.y >= 4
+			):
+				continue
+
+			var neighbor: TileState = game.enemy_bs.get_tile(neighbor_pos.x, neighbor_pos.y)
+
+			if (
+					neighbor == null
+					or neighbor.is_dead()
+					or neighbor.definition.id == &"shield"
+			):
+				continue
+
+			var protected_hp: int = mini(neighbor.max_hp, maxi(neighbor.hp, 2))
+
+			score += protected_hp - neighbor.hp
+
+		if score > best_score:
+			best_score = score
+			best_idx = idx
+
+	return best_idx
 
 
 func has_damaged_enemy_tile() -> bool:
