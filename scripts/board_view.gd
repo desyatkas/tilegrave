@@ -48,7 +48,7 @@ func refresh() -> void:
 			b_cell.turns_until_destroyed_label.text = ""
 		else:
 			if tile.is_alive():
-				b_cell.tooltip_text = "%s - %d/%d HP\n\n%s" % [
+				b_cell.tooltip_text = "%s\n\nHealth: %d/%d\n\n%s" % [
 					tile.definition.display_name,
 					tile.hp,
 					tile.max_hp,

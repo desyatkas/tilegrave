@@ -31,8 +31,9 @@ func setup(p_definition: TileDefinition, p_offer_index: int, available_energy: i
 	offer_index = p_offer_index
 	offer_icon.texture = definition.icon
 	cost_label.text = str(definition.cost)
-	tooltip_text = "%s\n%d HP\n\n%s" % [
+	tooltip_text = "%s\n\nCost: %d\nHealth: %d\n\n%s" % [
 		definition.display_name,
+		definition.cost,
 		definition.max_hp,
 		definition.description
 	]
