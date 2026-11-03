@@ -47,6 +47,16 @@ func get_empty_indices() -> Array[int]:
 	return empty_indices
 
 
+func get_occupied_indices() -> Array[int]:
+	var occupied_indices: Array[int]
+
+	for idx in range(cells.size()):
+		if cells[idx] != null:
+			occupied_indices.append(idx)
+
+	return occupied_indices
+
+
 func get_alive_indices() -> Array[int]:
 	var alive_indices: Array[int]
 
@@ -55,3 +65,13 @@ func get_alive_indices() -> Array[int]:
 			alive_indices.append(idx)
 
 	return alive_indices
+
+
+func get_dead_indices() -> Array[int]:
+	var dead_indices: Array[int]
+
+	for idx in range(cells.size()):
+		if cells[idx] != null and cells[idx].is_dead():
+			dead_indices.append(idx)
+
+	return dead_indices
