@@ -7,6 +7,7 @@ const MEDKIT_TILE: TileDefinition = preload("res://resources/medkit_tile.tres")
 const SHIELD_TILE: TileDefinition = preload("res://resources/shield_tile.tres")
 const H_MIRROR_TILE: TileDefinition = preload("res://resources/horizontal_mirror_tile.tres")
 const V_MIRROR_TILE: TileDefinition = preload("res://resources/vertical_mirror_tile.tres")
+const BOMB_TILE: TileDefinition = preload("res://resources/bomb_tile.tres")
 
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
@@ -39,6 +40,7 @@ func _ready() -> void:
 		SHIELD_TILE,
 		H_MIRROR_TILE,
 		V_MIRROR_TILE,
+		BOMB_TILE,
 	]
 
 	shop_view.setup(tile_pool, game.player_energy)

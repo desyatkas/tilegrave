@@ -134,6 +134,46 @@ func _resolve_mirror(bs: BoardState, idx: int) -> void:
 	bs.set_tile(target.x, target.y, target_tile)
 
 
+func _resolve_bomb(bs: BoardState, idx: int) -> void:
+	var opponent_bs: BoardState = enemy_bs if bs == player_bs else player_bs
+	var pos: Array[int] = opponent_bs.idx_to_pos(idx)
+	var x: int = pos[0]
+	var y: int = pos[1]
+	var neighbors: Array[Vector2i] = [
+		Vector2i(x, y - 1),
+		Vector2i(x - 1, y),
+		Vector2i(x, y + 1),
+		Vector2i(x + 1, y),
+	]
+	var target: TileState = opponent_bs.cells[idx]
+
+	if target != null:
+		target.take_damage(1)
+
+	for neighbor_pos in neighbors:
+		if (
+				neighbor_pos.x < 0
+				or neighbor_pos.x >= 4
+				or neighbor_pos.y < 0
+				or neighbor_pos.y >= 4
+		):
+			continue
+
+		var neighbor: TileState = opponent_bs.get_tile(
+			neighbor_pos.x,
+			neighbor_pos.y
+		)
+
+		if (
+				neighbor == null
+				or neighbor.is_dead()
+		):
+			continue
+
+		neighbor.take_damage(1)
+
+	bs.cells[idx].take_damage(bs.cells[idx].hp)
+
 func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition) -> bool:
 	if (
 			(board != player_bs and board != enemy_bs)
@@ -184,3 +224,5 @@ func resolve_abilities(bs: BoardState) -> void:
 				_resolve_shield(bs, idx)
 			&"h_mirror", &"v_mirror":
 				_resolve_mirror(bs, idx)
+			&"bomb":
+				_resolve_bomb(bs, idx)

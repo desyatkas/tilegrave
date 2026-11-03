@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://bnxtve436ek7"]
+
+[ext_resource type="Texture2D" uid="uid://kinj5dk0kcgj" path="res://textures/bomb.png" id="1_eygfj"]
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_xxmgo"]
+
+[resource]
+script = ExtResource("1_xxmgo")
+id = &"bomb"
+icon = ExtResource("1_eygfj")
+display_name = "Bomb Tile"
+description = "Deals damage to the enemy
+tile in the same cell and its neighbors, then kills itself immediately."
+max_hp = 2
+cost = 6
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"
