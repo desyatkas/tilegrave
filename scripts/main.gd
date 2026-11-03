@@ -206,11 +206,11 @@ func update_ui() -> void:
 	var enemy_hp: int = 0
 	var enemy_max_hp: int = 0
 
-	for idx in player_bv.board_state.get_alive_indices():
+	for idx in player_bv.board_state.get_occupied_indices():
 		player_hp += player_bv.board_state.cells[idx].hp
 		player_max_hp += player_bv.board_state.cells[idx].max_hp
 
-	for idx in enemy_bv.board_state.get_alive_indices():
+	for idx in enemy_bv.board_state.get_occupied_indices():
 		enemy_hp += enemy_bv.board_state.cells[idx].hp
 		enemy_max_hp += enemy_bv.board_state.cells[idx].max_hp
 
