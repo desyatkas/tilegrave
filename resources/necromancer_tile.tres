@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://bsuhl21serygk"]
+
+[ext_resource type="Texture2D" uid="uid://bnd7y4mrq5gv2" path="res://textures/necromancer.png" id="1_5c6rc"]
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_bfldj"]
+
+[resource]
+script = ExtResource("1_bfldj")
+id = &"necromancer"
+icon = ExtResource("1_5c6rc")
+display_name = "Necromancer Tile"
+description = "If there are dead tiles, revives
+all of them and takes damage."
+max_hp = 2
+cost = 9
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

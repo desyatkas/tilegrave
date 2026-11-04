@@ -174,6 +174,19 @@ func _resolve_bomb(bs: BoardState, idx: int) -> void:
 
 	bs.cells[idx].take_damage(bs.cells[idx].hp)
 
+
+func _resolve_necromancer(bs: BoardState, idx: int) -> void:
+	var did_heal: bool = false
+
+	for i in bs.get_dead_indices():
+		if bs.cells[i].definition.id != &"necromancer":
+			bs.cells[i].heal(1)
+			did_heal = true
+
+	if did_heal:
+		bs.cells[idx].take_damage(1)
+
+
 func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition) -> bool:
 	if (
 			(board != player_bs and board != enemy_bs)
@@ -226,3 +239,5 @@ func resolve_abilities(bs: BoardState) -> void:
 				_resolve_mirror(bs, idx)
 			&"bomb":
 				_resolve_bomb(bs, idx)
+			&"necromancer":
+				_resolve_necromancer(bs, idx)
