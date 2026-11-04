@@ -165,6 +165,15 @@ func run_enemy_turn() -> void:
 
 	if (
 			tile_idx == -1
+			and game.enemy_energy >= NECROMANCER_TILE.cost
+			and has_revivable_dead_enemy_tile()
+			and not empty_indices.is_empty()
+	):
+		tile_idx = empty_indices.pick_random()
+		definition = NECROMANCER_TILE
+
+	if (
+			tile_idx == -1
 			and game.enemy_energy >= MEDKIT_TILE.cost
 			and has_damaged_enemy_tile()
 			and not empty_indices.is_empty()
@@ -376,6 +385,16 @@ func has_damaged_enemy_tile() -> bool:
 		var tile: TileState = game.enemy_bs.cells[idx]
 
 		if tile.hp < tile.max_hp and tile.definition.id != &"medkit":
+			return true
+
+	return false
+
+
+func has_revivable_dead_enemy_tile() -> bool:
+	for idx in game.enemy_bs.get_dead_indices():
+		var tile: TileState = game.enemy_bs.cells[idx]
+
+		if tile.definition.id != &"necromancer":
 			return true
 
 	return false
