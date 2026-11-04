@@ -12,6 +12,6 @@ description = "Deals damage to the enemy
 tile in the same cell and its
 neighbors, then kills itself
 immediately."
-max_hp = 2
+max_hp = 1
 cost = 6
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"
