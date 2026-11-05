@@ -9,6 +9,7 @@ const H_MIRROR_TILE: TileDefinition = preload("res://resources/horizontal_mirror
 const V_MIRROR_TILE: TileDefinition = preload("res://resources/vertical_mirror_tile.tres")
 const BOMB_TILE: TileDefinition = preload("res://resources/bomb_tile.tres")
 const NECROMANCER_TILE: TileDefinition = preload("res://resources/necromancer_tile.tres")
+const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.tres")
 
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
@@ -43,6 +44,7 @@ func _ready() -> void:
 		V_MIRROR_TILE,
 		BOMB_TILE,
 		NECROMANCER_TILE,
+		GENERATOR_TILE,
 	]
 
 	shop_view.setup(tile_pool, game.player_energy)

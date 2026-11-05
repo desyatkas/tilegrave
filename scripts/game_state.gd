@@ -187,6 +187,18 @@ func _resolve_necromancer(bs: BoardState, idx: int) -> void:
 		bs.cells[idx].take_damage(1)
 
 
+func _resolve_generator(bs: BoardState, idx) -> void:
+	var energy_gain = bs.cells[idx].hp
+
+	if bs == player_bs:
+		player_energy += energy_gain
+	elif bs == enemy_bs:
+		enemy_energy += energy_gain
+
+	if energy_gain > 0:
+		bs.cells[idx].take_damage(1)
+
+
 func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition) -> bool:
 	if (
 			(board != player_bs and board != enemy_bs)
@@ -241,3 +253,5 @@ func resolve_abilities(bs: BoardState) -> void:
 				_resolve_bomb(bs, idx)
 			&"necromancer":
 				_resolve_necromancer(bs, idx)
+			&"generator":
+				_resolve_generator(bs, idx)

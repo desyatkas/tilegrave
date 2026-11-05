@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://vqwj5hxgubin"]
+
+[ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_432xn"]
+[ext_resource type="Texture2D" uid="uid://b5bcr66wxwhx7" path="res://textures/generator.png" id="1_wy8kd"]
+
+[resource]
+script = ExtResource("1_432xn")
+id = &"generator"
+icon = ExtResource("1_wy8kd")
+display_name = "Generator Tile"
+description = "Each health point of this tile
+converts into extra energy
+every turn, but loses 1 health
+point every time it produces
+some energy."
+max_hp = 4
+cost = 8
+metadata/_custom_type_script = "uid://ci6utw6o0hdlm"
