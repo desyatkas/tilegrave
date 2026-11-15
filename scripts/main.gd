@@ -84,12 +84,19 @@ func _on_end_turn_pressed() -> void:
 	if game_over:
 		return
 
+	end_turn_button.disabled = true
+	player_bv.accepts_tile_drops = false
 	turns += 1
 
-	game.resolve_abilities(game.player_bs)
+	await resolve_abilities_animated(player_bv, game.player_bs)
+
 	game.player_bs.advance_turn()
 	game.regenerate_energy(game.player_bs)
-	run_enemy_turn()
+	player_bv.refresh()
+	update_ui()
+
+	await run_enemy_turn()
+
 	enemy_has_taken_turn = true
 	player_bv.refresh()
 	enemy_bv.refresh()
@@ -100,7 +107,33 @@ func _on_end_turn_pressed() -> void:
 		return
 
 	shop_view.refresh_offers(game.player_energy)
+	end_turn_button.disabled = false
+	player_bv.accepts_tile_drops = true
 	update_ui()
+
+
+func resolve_abilities_animated(board_view: BoardView, bs: BoardState) -> void:
+	var ability_indices: Array[int] = bs.get_alive_indices()
+
+	for idx in ability_indices:
+		var tile: TileState = bs.cells[idx]
+
+		if tile == null or not tile.is_alive() or not game.has_ability(tile):
+			continue
+
+		var cell: BoardCell = board_view.cell_buttons[idx]
+
+		await cell.animate_ability_start()
+
+		if bs.cells[idx] == tile and tile.is_alive():
+			game.resolve_ability(bs, idx)
+			player_bv.refresh()
+			enemy_bv.refresh()
+			update_ui()
+
+			await get_tree().create_timer(0.25).timeout
+
+		await cell.animate_ability_end()
 
 
 func run_enemy_turn() -> void:
@@ -201,9 +234,15 @@ func run_enemy_turn() -> void:
 			definition
 		)
 
-	game.resolve_abilities(game.enemy_bs)
+	enemy_bv.refresh()
+	update_ui()
+
+	await resolve_abilities_animated(enemy_bv, game.enemy_bs)
+
 	game.enemy_bs.advance_turn()
 	game.regenerate_energy(game.enemy_bs)
+	enemy_bv.refresh()
+	update_ui()
 
 
 func find_sword_target_idx(empty_indices: Array[int]) -> int:

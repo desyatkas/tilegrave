@@ -233,25 +233,42 @@ func regenerate_energy(board: BoardState) -> void:
 		enemy_energy = mini(enemy_energy + energy_gain, enemy_max_energy)
 
 
-func resolve_abilities(bs: BoardState) -> void:
-	if bs != player_bs and bs != enemy_bs:
+func has_ability(tile: TileState) -> bool:
+	if tile == null:
+		return false
+
+	match tile.definition.id:
+		&"sword", &"medkit", &"shield", &"h_mirror", &"v_mirror", &"bomb", &"necromancer", &"generator":
+			return true
+		_:
+			return false
+
+
+func resolve_ability(bs: BoardState, idx: int) -> void:
+	if (
+			(bs != player_bs and bs != enemy_bs)
+			or idx < 0
+			or idx >= bs.cells.size()
+	):
 		return
 
-	for idx in bs.get_alive_indices():
-		var tile: TileState = bs.cells[idx]
+	var tile: TileState = bs.cells[idx]
 
-		match tile.definition.id:
-			&"sword":
-				_resolve_sword(bs, idx)
-			&"medkit":
-				_resolve_medkit(bs, idx)
-			&"shield":
-				_resolve_shield(bs, idx)
-			&"h_mirror", &"v_mirror":
-				_resolve_mirror(bs, idx)
-			&"bomb":
-				_resolve_bomb(bs, idx)
-			&"necromancer":
-				_resolve_necromancer(bs, idx)
-			&"generator":
-				_resolve_generator(bs, idx)
+	if tile == null or not tile.is_alive():
+		return
+
+	match tile.definition.id:
+		&"sword":
+			_resolve_sword(bs, idx)
+		&"medkit":
+			_resolve_medkit(bs, idx)
+		&"shield":
+			_resolve_shield(bs, idx)
+		&"h_mirror", &"v_mirror":
+			_resolve_mirror(bs, idx)
+		&"bomb":
+			_resolve_bomb(bs, idx)
+		&"necromancer":
+			_resolve_necromancer(bs, idx)
+		&"generator":
+			_resolve_generator(bs, idx)
