@@ -14,6 +14,18 @@ var accepts_tile_drops: bool = false
 var available_energy: int = 0
 
 
+func _ready() -> void:
+	get_parent().rotation_degrees = randf_range(-1.0, 1.0)
+
+	var tween = create_tween()
+
+	tween.set_loops()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(get_parent(), "rotation_degrees", 0.5, 5.0)
+	tween.tween_property(get_parent(), "rotation_degrees", -0.5, 5.0)
+
+
 func _on_cell_pressed(idx: int) -> void:
 	cell_pressed.emit(idx)
 

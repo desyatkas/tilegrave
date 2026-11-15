@@ -6,5 +6,6 @@
 [node name="ShopView" type="GridContainer" unique_id=1978257146]
 offset_right = 112.0
 offset_bottom = 512.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme = ExtResource("1_wpwgs")
 script = ExtResource("1_q4jju")

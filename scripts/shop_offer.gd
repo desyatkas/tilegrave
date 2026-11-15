@@ -11,6 +11,7 @@ const OCCUPIED_CELL_ICON: Texture2D = preload("res://textures/board_cell.png")
 var definition: TileDefinition
 var offer_index: int
 var affordable: bool
+var tween: Tween
 
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
@@ -24,6 +25,58 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 		"definition": definition,
 		"offer_index": offer_index
 	}
+
+
+func _on_mouse_entered() -> void:
+	if not definition or not affordable:
+		return
+
+	if tween and tween.is_running():
+		tween.kill()
+
+	z_index = 1
+	tween = create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		self,
+		"scale",
+		Vector2.ONE * 1.1,
+		0.2
+	)
+	tween.parallel().tween_property(
+		self,
+		"rotation_degrees",
+		5,
+		0.2
+	)
+
+	await tween.finished
+
+
+func _on_mouse_exited() -> void:
+	if tween and tween.is_running():
+		tween.kill()
+
+	tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(
+		self,
+		"scale",
+		Vector2.ONE,
+		0.2
+	)
+	tween.parallel().tween_property(
+		self,
+		"rotation_degrees",
+		0,
+		0.2
+	)
+
+	await tween.finished
+
+	z_index = 0
 
 
 func setup(p_definition: TileDefinition, p_offer_index: int, available_energy: int) -> void:
