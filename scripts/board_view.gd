@@ -54,12 +54,26 @@ func refresh() -> void:
 		b_cell.cell_icon.modulate = Color.WHITE
 
 		if tile == null:
+			if b_cell.displayed_tile != null:
+				b_cell.tile_icon.modulate = Color.WHITE
+				b_cell.tile_icon.scale = Vector2.ONE
+				b_cell.tile_icon.rotation_degrees = 0.0
+
+			b_cell.displayed_tile = null
+			b_cell.displayed_is_alive = true
 			b_cell.tooltip_text = ""
 			b_cell.tile_icon.texture = null
 			b_cell.hp_label.text = ""
 			b_cell.turns_until_destroyed_label.text = ""
 		else:
 			tile.bc = b_cell
+
+			if b_cell.displayed_tile != tile or b_cell.displayed_is_alive != tile.is_alive():
+				b_cell.tile_icon.modulate = Color.WHITE if tile.is_alive() else Color.WHITE.darkened(0.5)
+				b_cell.tile_icon.scale = Vector2.ONE
+				b_cell.tile_icon.rotation_degrees = 0.0
+				b_cell.displayed_tile = tile
+				b_cell.displayed_is_alive = tile.is_alive()
 
 			if tile.is_alive():
 				b_cell.tooltip_text = "%s\n\nHealth: %d/%d\n\n%s" % [
@@ -79,6 +93,17 @@ func refresh() -> void:
 			b_cell.tile_icon.texture = tile.definition.icon
 			b_cell.hp_label.text = str(tile.hp)
 			b_cell.turns_until_destroyed_label.text = str(tile.turns_until_destroyed) if tile.is_dead() else ""
+
+			var visual_events: int = tile.consume_visual_events()
+
+			if (visual_events & TileState.VisualEvent.DIED) != 0:
+				b_cell.animate_death()
+			elif (visual_events & TileState.VisualEvent.REVIVED) != 0:
+				b_cell.animate_revival()
+			elif (visual_events & TileState.VisualEvent.CLONE_SOURCE) != 0:
+				b_cell.animate_clone_source(tile.is_alive())
+			elif (visual_events & TileState.VisualEvent.CLONE_TARGET) != 0:
+				b_cell.animate_clone_target(tile.is_alive())
 
 
 func can_accept_drop(idx: int, data: Variant) -> bool:

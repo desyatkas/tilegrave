@@ -41,14 +41,14 @@ func _on_mouse_entered() -> void:
 	tween.tween_property(
 		self,
 		"scale",
-		Vector2.ONE * 1.1,
-		0.2
+		Vector2(1.1, 1.1),
+		0.1
 	)
 	tween.parallel().tween_property(
 		self,
 		"rotation_degrees",
 		5,
-		0.2
+		0.1
 	)
 
 	await tween.finished
@@ -65,13 +65,13 @@ func _on_mouse_exited() -> void:
 		self,
 		"scale",
 		Vector2.ONE,
-		0.2
+		0.1
 	)
 	tween.parallel().tween_property(
 		self,
 		"rotation_degrees",
 		0,
-		0.2
+		0.1
 	)
 
 	await tween.finished
@@ -104,13 +104,13 @@ func setup(p_definition: TileDefinition, p_offer_index: int, available_energy: i
 		self,
 		"scale",
 		Vector2.ONE,
-		1.0
+		0.5
 	)
 	tween.parallel().tween_property(
 		self,
 		"rotation_degrees",
 		0.0,
-		1.0
+		0.5
 	)
 
 

@@ -127,10 +127,13 @@ func _resolve_mirror(bs: BoardState, idx: int) -> void:
 	if bs.get_tile(target.x, target.y) != null:
 		return
 
-	var target_tile: TileState = TileState.new(source_tile.definition) if source_tile else null
+	var target_tile: TileState = TileState.new(source_tile.definition)
 
 	target_tile.hp = source_tile.hp
 	target_tile.turns_until_destroyed = source_tile.turns_until_destroyed
+	target_tile.just_died = source_tile.just_died
+	target_tile.queue_visual_event(TileState.VisualEvent.CLONE_TARGET)
+	source_tile.queue_visual_event(TileState.VisualEvent.CLONE_SOURCE)
 	bs.set_tile(target.x, target.y, target_tile)
 
 

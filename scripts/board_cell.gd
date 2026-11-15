@@ -9,6 +9,31 @@ extends Button
 var cell_idx: int = -1
 var board_view: BoardView
 var tween: Tween
+var effect_tween: Tween
+var displayed_tile: TileState
+var displayed_is_alive: bool = true
+
+
+func _ready() -> void:
+	turns_until_destroyed_label.rotation_degrees = randf_range(-1.0, 1.0)
+
+	var loop_tween = create_tween()
+
+	loop_tween.set_loops()
+	loop_tween.set_trans(Tween.TRANS_SINE)
+	loop_tween.set_ease(Tween.EASE_IN_OUT)
+	loop_tween.tween_property(
+			turns_until_destroyed_label,
+			"rotation_degrees",
+			1.0,
+			0.1
+	)
+	loop_tween.tween_property(
+			turns_until_destroyed_label,
+			"rotation_degrees",
+			-1.0,
+			0.1
+	)
 
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
@@ -37,14 +62,14 @@ func _on_mouse_entered() -> void:
 	tween.tween_property(
 		self,
 		"scale",
-		Vector2.ONE * 1.1,
-		0.2
+		Vector2(1.1, 1.1),
+		0.1
 	)
 	tween.parallel().tween_property(
 		self,
 		"rotation_degrees",
 		5,
-		0.2
+		0.1
 	)
 
 	await tween.finished
@@ -61,13 +86,13 @@ func _on_mouse_exited() -> void:
 		self,
 		"scale",
 		Vector2.ONE,
-		0.2
+		0.1
 	)
 	tween.parallel().tween_property(
 		self,
 		"rotation_degrees",
 		0,
-		0.2
+		0.1
 	)
 
 	await tween.finished
@@ -86,8 +111,8 @@ func animate_ability_start() -> void:
 	tween.tween_property(
 		self,
 		"scale",
-		Vector2.ONE * 1.1,
-		0.2
+		Vector2(1.1, 1.1),
+		0.1
 	)
 
 	await tween.finished
@@ -104,9 +129,183 @@ func animate_ability_end() -> void:
 		self,
 		"scale",
 		Vector2.ONE,
-		0.2
+		0.1
 	)
 
 	await tween.finished
 
 	z_index = 0
+
+func animate_death() -> void:
+	if effect_tween and effect_tween.is_running():
+		effect_tween.kill()
+
+	tile_icon.scale = Vector2.ONE
+	tile_icon.rotation_degrees = 0.0
+	tile_icon.modulate = Color.WHITE
+	effect_tween = create_tween()
+	effect_tween.set_trans(Tween.TRANS_BACK)
+	effect_tween.set_ease(Tween.EASE_OUT)
+	effect_tween.tween_property(
+		tile_icon,
+		"scale",
+		Vector2(1.1, 1.1),
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"rotation_degrees",
+		10.0,
+		0.1
+	)
+	effect_tween.chain().tween_property(
+		tile_icon,
+		"scale",
+		Vector2(0.75, 0.75),
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"rotation_degrees",
+		-5.0,
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"modulate",
+		Color.RED,
+		0.1
+	)
+	effect_tween.chain().tween_property(
+		tile_icon,
+		"scale",
+		Vector2.ONE,
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"rotation_degrees",
+		0.0,
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"modulate",
+		Color.WHITE.darkened(0.5),
+		0.1
+	)
+
+
+func animate_revival() -> void:
+	if effect_tween and effect_tween.is_running():
+		effect_tween.kill()
+
+	tile_icon.scale = Vector2.ONE
+	tile_icon.rotation_degrees = 0.0
+	tile_icon.scale = Vector2(0.75, 0.75)
+	tile_icon.modulate = Color.GREEN
+	effect_tween = create_tween()
+	effect_tween.set_trans(Tween.TRANS_BACK)
+	effect_tween.set_ease(Tween.EASE_OUT)
+	effect_tween.tween_property(
+		tile_icon,
+		"scale",
+		Vector2(1.1, 1.1),
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"modulate",
+		Color.WHITE,
+		0.1
+	)
+	effect_tween.chain().tween_property(
+		tile_icon,
+		"scale",
+		Vector2.ONE,
+		0.1
+	)
+
+
+func animate_clone_source(is_alive: bool) -> void:
+	if effect_tween and effect_tween.is_running():
+		effect_tween.kill()
+
+	tile_icon.scale = Vector2.ONE
+	tile_icon.rotation_degrees = 0.0
+	tile_icon.modulate = Color.WHITE
+
+	var final_modulate: Color = Color.WHITE if is_alive else Color.WHITE.darkened(0.5)
+
+	effect_tween = create_tween()
+	effect_tween.set_trans(Tween.TRANS_BACK)
+	effect_tween.set_ease(Tween.EASE_OUT)
+	effect_tween.tween_property(
+		tile_icon,
+		"scale",
+		Vector2(1.1, 1.1),
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"modulate",
+		Color.BLUE,
+		0.1
+	)
+	effect_tween.chain().tween_property(
+		tile_icon,
+		"scale",
+		Vector2.ONE,
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"modulate",
+		final_modulate,
+		0.1
+	)
+
+
+func animate_clone_target(is_alive: bool) -> void:
+	if effect_tween and effect_tween.is_running():
+		effect_tween.kill()
+
+	tile_icon.scale = Vector2.ZERO
+	tile_icon.rotation_degrees = 180.0
+	tile_icon.modulate = Color(Color.BLUE, 0.0)
+
+	var final_modulate: Color = Color.WHITE if is_alive else Color.WHITE.darkened(0.5)
+
+	effect_tween = create_tween()
+	effect_tween.set_trans(Tween.TRANS_BACK)
+	effect_tween.set_ease(Tween.EASE_OUT)
+	effect_tween.tween_property(
+		tile_icon,
+		"scale",
+		Vector2(1.1, 1.1),
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"rotation_degrees",
+		0.0,
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"modulate",
+		Color.BLUE,
+		0.1
+	)
+	effect_tween.chain().tween_property(
+		tile_icon,
+		"modulate",
+		final_modulate,
+		0.1
+	)
+	effect_tween.parallel().tween_property(
+		tile_icon,
+		"scale",
+		Vector2.ONE,
+		0.1
+	)
