@@ -80,6 +80,8 @@ func _on_mouse_exited() -> void:
 
 
 func setup(p_definition: TileDefinition, p_offer_index: int, available_energy: int) -> void:
+	scale = Vector2.ZERO
+	rotation_degrees = 180.0
 	definition = p_definition
 	offer_index = p_offer_index
 	offer_icon.texture = definition.icon
@@ -91,6 +93,25 @@ func setup(p_definition: TileDefinition, p_offer_index: int, available_energy: i
 		definition.description
 	]
 	update_affordability(available_energy)
+
+	if tween and tween.is_running():
+		tween.kill()
+
+	tween = create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		self,
+		"scale",
+		Vector2.ONE,
+		1.0
+	)
+	tween.parallel().tween_property(
+		self,
+		"rotation_degrees",
+		0.0,
+		1.0
+	)
 
 
 func update_affordability(available_energy: int) -> void:
