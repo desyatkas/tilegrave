@@ -9,7 +9,7 @@ var player_bs: BoardState
 var enemy_bs: BoardState
 var player_energy: int = 8
 var player_max_energy: int = 16
-var enemy_energy: int = 8
+var enemy_energy: int = 4
 var enemy_max_energy: int = 16
 
 
@@ -46,6 +46,7 @@ func _resolve_medkit(bs: BoardState, idx: int) -> void:
 		if (
 				bs.cells[i].hp < bs.cells[i].max_hp
 				and bs.cells[i].definition.id != &"medkit"
+				and bs.cells[i].definition.id != &"shield"
 		):
 			pool.append(bs.cells[i])
 
@@ -87,6 +88,7 @@ func _resolve_shield(bs: BoardState, idx: int) -> void:
 		if (
 				neighbor == null
 				or neighbor.definition.id == &"shield"
+				or neighbor.definition.id == &"medkit"
 				or not neighbor.is_alive()
 		):
 			continue
@@ -189,9 +191,12 @@ func _resolve_necromancer(bs: BoardState, idx: int) -> void:
 	var did_heal: bool = false
 
 	for i in bs.get_dead_indices():
-		if bs.cells[i].definition.id != &"necromancer":
-			bs.cells[i].heal(1)
-			did_heal = true
+		match bs.cells[i].definition.id:
+			&"necromancer", &"medkit":
+				continue
+			_:
+				bs.cells[i].heal(1)
+				did_heal = true
 
 	if did_heal:
 		bs.cells[idx].take_damage(1)
@@ -244,7 +249,7 @@ func regenerate_energy(board: BoardState) -> void:
 	if board == player_bs:
 		player_energy = mini(player_energy + energy_gain, player_max_energy)
 	elif board == enemy_bs:
-		enemy_energy = mini(enemy_energy + energy_gain, enemy_max_energy)
+		enemy_energy = mini(enemy_energy + mini(energy_gain, 4), enemy_max_energy)
 
 	energy_changed.emit(board)
 

@@ -11,7 +11,6 @@ const BOMB_TILE: TileDefinition = preload("res://resources/bomb_tile.tres")
 const NECROMANCER_TILE: TileDefinition = preload("res://resources/necromancer_tile.tres")
 const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.tres")
 
-@export var back_to_main_menu_button: Button
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
 @export var shop_view: ShopView
@@ -23,7 +22,9 @@ const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.t
 @export var enemy_hp_label: RichTextLabel
 @export var enemy_energy_icon: TextureRect
 @export var enemy_energy_label: RichTextLabel
+@export var turns_left_label: RichTextLabel
 @export var end_turn_button: Button
+@export var back_to_main_menu_button: Button
 @export var main_menu_panel: Panel
 @export var logo: TextureRect
 @export var version_label: RichTextLabel
@@ -36,7 +37,7 @@ const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.t
 
 
 var game: GameState
-var turns: int = 0
+var turns_left: int = 50
 var game_over: bool = false
 var enemy_has_taken_turn: bool = false
 
@@ -159,7 +160,7 @@ func _on_end_turn_pressed() -> void:
 	click_sfx.play()
 	end_turn_button.disabled = true
 	player_bv.accepts_tile_drops = false
-	turns += 1
+	turns_left -= 1
 
 	await resolve_abilities_animated(player_bv, game.player_bs)
 
@@ -211,24 +212,29 @@ func resolve_abilities_animated(board_view: BoardView, bs: BoardState) -> void:
 
 func run_enemy_turn() -> void:
 	var empty_indices: Array[int] = game.enemy_bs.get_empty_indices()
+	var available_tiles: Dictionary = {}
 	var tile_idx: int = -1
-	var definition: TileDefinition = HEART_TILE
+	var definition: TileDefinition
+
+	for def in shop_view.get_available_definitions():
+		available_tiles[def.id] = def
+
+	var heart_tile: TileDefinition = available_tiles.get(&"heart")
+	var sword_tile: TileDefinition = available_tiles.get(&"sword")
+	var medkit_tile: TileDefinition = available_tiles.get(&"medkit")
+	var shield_tile: TileDefinition = available_tiles.get(&"shield")
+	var h_mirror_tile: TileDefinition = available_tiles.get(&"h_mirror")
+	var v_mirror_tile: TileDefinition = available_tiles.get(&"v_mirror")
+	var bomb_tile: TileDefinition = available_tiles.get(&"bomb")
+	var necromancer_tile: TileDefinition = available_tiles.get(&"necromancer")
+	var generator_tile: TileDefinition = available_tiles.get(&"generator")
 
 	if (
 			tile_idx == -1
-			and game.enemy_energy >= SHIELD_TILE.cost
+			and h_mirror_tile != null
+			and game.enemy_energy >= h_mirror_tile.cost
 			and not empty_indices.is_empty()
 	):
-		tile_idx = find_best_shield_idx(empty_indices)
-
-		if tile_idx != -1:
-			definition = SHIELD_TILE
-
-	if (
-			tile_idx == -1
-			and not empty_indices.is_empty()
-	):
-		if game.enemy_energy >= H_MIRROR_TILE.cost:
 			var h_idx: int = find_best_mirror_idx(
 				empty_indices,
 				&"h_mirror"
@@ -236,66 +242,93 @@ func run_enemy_turn() -> void:
 
 			if h_idx != -1:
 				tile_idx = h_idx
-				definition = H_MIRROR_TILE
-
-		if (
-			tile_idx == -1
-			and game.enemy_energy >= V_MIRROR_TILE.cost
-		):
-			var v_idx: int = find_best_mirror_idx(
-				empty_indices,
-				&"v_mirror"
-			)
-
-			if v_idx != -1:
-				tile_idx = v_idx
-				definition = V_MIRROR_TILE
+				definition = h_mirror_tile
 
 	if (
 			tile_idx == -1
-			and game.enemy_energy >= BOMB_TILE.cost
+			and v_mirror_tile != null
+			and game.enemy_energy >= v_mirror_tile.cost
+			and not empty_indices.is_empty()
+	):
+		var v_idx: int = find_best_mirror_idx(
+			empty_indices,
+			&"v_mirror"
+		)
+
+		if v_idx != -1:
+			tile_idx = v_idx
+			definition = v_mirror_tile
+
+	if (
+			tile_idx == -1
+			and necromancer_tile != null
+			and game.enemy_energy >= necromancer_tile.cost
+			and has_revivable_dead_enemy_tile()
+			and not empty_indices.is_empty()
+	):
+		tile_idx = empty_indices.pick_random()
+		definition = necromancer_tile
+
+	if (
+			tile_idx == -1
+			and generator_tile != null
+			and game.enemy_energy >= generator_tile.cost
+			and not empty_indices.is_empty()
+	):
+		tile_idx = empty_indices.pick_random()
+		definition = generator_tile
+
+	if (
+		tile_idx == -1
+		and shield_tile != null
+		and game.enemy_energy >= shield_tile.cost
+		and not empty_indices.is_empty()
+	):
+		tile_idx = find_best_shield_idx(empty_indices)
+
+		if tile_idx != -1:
+			definition = shield_tile
+
+	if (
+			tile_idx == -1
+			and bomb_tile != null
+			and game.enemy_energy >= bomb_tile.cost
 			and not empty_indices.is_empty()
 	):
 		tile_idx = find_best_bomb_idx(empty_indices)
 
 		if tile_idx != -1:
-			definition = BOMB_TILE
+			definition = bomb_tile
 
 	if (
 			tile_idx == -1
-			and game.enemy_energy >= SWORD_TILE.cost
+			and sword_tile != null
+			and game.enemy_energy >= sword_tile.cost
 			and not empty_indices.is_empty()
 	):
 		tile_idx = find_sword_target_idx(empty_indices)
 
 		if tile_idx != -1:
-			definition = SWORD_TILE
+			definition = sword_tile
 
 	if (
 			tile_idx == -1
-			and game.enemy_energy >= NECROMANCER_TILE.cost
-			and has_revivable_dead_enemy_tile()
-			and not empty_indices.is_empty()
-	):
-		tile_idx = empty_indices.pick_random()
-		definition = NECROMANCER_TILE
-
-	if (
-			tile_idx == -1
-			and game.enemy_energy >= MEDKIT_TILE.cost
+			and medkit_tile != null
+			and game.enemy_energy >= medkit_tile.cost
 			and has_damaged_enemy_tile()
 			and not empty_indices.is_empty()
 	):
 		tile_idx = empty_indices.pick_random()
-		definition = MEDKIT_TILE
+		definition = medkit_tile
 
 	if (
 			tile_idx == -1
-			and game.enemy_energy >= HEART_TILE.cost
+			and heart_tile != null
+			and game.enemy_energy >= heart_tile.cost
 			and not empty_indices.is_empty()
 	):
 		tile_idx = empty_indices.pick_random()
-		definition = HEART_TILE
+		definition = heart_tile
 
 	if tile_idx != -1:
 		var pos: Array[int] = game.enemy_bs.idx_to_pos(tile_idx)
@@ -316,6 +349,31 @@ func run_enemy_turn() -> void:
 	game.regenerate_energy(game.enemy_bs)
 	enemy_bv.refresh()
 	update_ui()
+
+	if turns_left <= 0:
+		var result: float = 0.5
+		var player_score: int = 0
+		var enemy_score: int = 0
+
+		for idx in player_bv.board_state.get_occupied_indices():
+			player_score += player_bv.board_state.cells[idx].hp
+			player_score += player_bv.board_state.cells[idx].max_hp
+
+		for idx in enemy_bv.board_state.get_occupied_indices():
+			enemy_score += enemy_bv.board_state.cells[idx].hp
+			enemy_score += enemy_bv.board_state.cells[idx].max_hp
+
+		player_score += game.player_energy
+		enemy_score += game.enemy_energy
+
+		if player_score > enemy_score:
+			result = 1.0
+		elif enemy_score > player_score:
+			result = 0.0
+		elif player_score == enemy_score:
+			result = 0.5
+
+		finish_game(result)
 
 
 func find_sword_target_idx(empty_indices: Array[int]) -> int:
@@ -371,7 +429,7 @@ func find_best_shield_idx(empty_indices: Array[int]) -> int:
 			):
 				continue
 
-			var protected_hp: int = mini(neighbor.max_hp, maxi(neighbor.hp, 2))
+			var protected_hp: int = mini(neighbor.max_hp, maxi(neighbor.hp, 1))
 
 			score += protected_hp - neighbor.hp
 
@@ -518,13 +576,13 @@ func check_game_over() -> bool:
 	var player_alive: bool = not game.player_bs.get_alive_indices().is_empty()
 	var enemy_alive: bool = not game.enemy_bs.get_alive_indices().is_empty()
 
-	if not player_alive:
-		finish_game(0.0)
+	if not player_alive and enemy_has_taken_turn and not enemy_alive:
+		finish_game(0.5)
 
 		return true
 
-	if not player_alive and enemy_has_taken_turn and not enemy_alive:
-		finish_game(0.5)
+	if not player_alive:
+		finish_game(0.0)
 
 		return true
 
@@ -585,6 +643,7 @@ func update_ui() -> void:
 	enemy_energy_label.text = "%d/%d" % [game.enemy_energy, game.enemy_max_energy]
 	player_bv.available_energy = game.player_energy
 	shop_view.update_energy(game.player_energy)
+	turns_left_label.text = "%d turns left until game over." % turns_left
 
 
 func _on_play_button_pressed() -> void:
@@ -601,13 +660,17 @@ func _on_play_button_pressed() -> void:
 		1.0
 	)
 
-	await get_tree().create_timer(0.666).timeout
+	await get_tree().create_timer(0.1).timeout
+
+	back_to_main_menu_button.visible = true
+
+	await get_tree().create_timer(0.5).timeout
 
 	player_bv.get_parent().visible = true
 	enemy_bv.get_parent().visible = true
 	shop_view.get_parent().visible = true
 
-	await get_tree().create_timer(0.111).timeout
+	await get_tree().create_timer(0.1).timeout
 
 	player_hp_icon.visible = true
 	player_hp_label.visible = true
@@ -617,11 +680,8 @@ func _on_play_button_pressed() -> void:
 	enemy_hp_label.visible = true
 	enemy_energy_icon.visible = true
 	enemy_energy_label.visible = true
+	turns_left_label.visible = true
 	end_turn_button.visible = true
-
-	await get_tree().create_timer(0.111).timeout
-
-	back_to_main_menu_button.visible = true
 
 
 func _on_quit_button_pressed() -> void:

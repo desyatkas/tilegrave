@@ -77,3 +77,13 @@ func refresh_offers(available_energy: int) -> void:
 
 	ensure_affordable_offer(available_energy)
 	update_energy(available_energy)
+
+
+func get_available_definitions() -> Array[TileDefinition]:
+	var definitions: Array[TileDefinition]
+
+	for offer in offers:
+		if offer.definition != null:
+			definitions.append(offer.definition)
+
+	return definitions
