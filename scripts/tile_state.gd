@@ -1,6 +1,8 @@
 class_name TileState
 extends RefCounted
 
+signal health_changed
+
 const HEALTH_PARTICLES_SCENE: PackedScene = preload("res://scenes/health_particles.tscn")
 
 enum VisualEvent {
@@ -47,6 +49,8 @@ func heal(amount: int) -> void:
 
 	_spawn_health_particles(true, healed_amount)
 
+	health_changed.emit()
+
 
 func take_damage(amount: int) -> void:
 	if amount <= 0 or is_dead():
@@ -67,6 +71,8 @@ func take_damage(amount: int) -> void:
 		queue_visual_event(VisualEvent.DIED)
 
 	_spawn_health_particles(false, damage_taken)
+
+	health_changed.emit()
 
 
 func _spawn_health_particles(is_healing: bool, amount: int) -> void:

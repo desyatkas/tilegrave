@@ -1,6 +1,8 @@
 class_name GameState
 extends RefCounted
 
+signal energy_changed(bs: BoardState)
+
 const HEART_TILE: TileDefinition = preload("res://resources/heart_tile.tres")
 
 var player_bs: BoardState
@@ -224,6 +226,8 @@ func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition
 	else:
 		enemy_energy -= definition.cost
 
+	energy_changed.emit(board)
+
 	return true
 
 
@@ -234,6 +238,8 @@ func regenerate_energy(board: BoardState) -> void:
 		player_energy = mini(player_energy + energy_gain, player_max_energy)
 	elif board == enemy_bs:
 		enemy_energy = mini(enemy_energy + energy_gain, enemy_max_energy)
+
+	energy_changed.emit(board)
 
 
 func has_ability(tile: TileState) -> bool:

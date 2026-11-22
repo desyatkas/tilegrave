@@ -14,13 +14,15 @@ const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.t
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
 @export var shop_view: ShopView
+@export var player_hp_icon: TextureRect
 @export var player_hp_label: RichTextLabel
+@export var player_energy_icon: TextureRect
 @export var player_energy_label: RichTextLabel
+@export var enemy_hp_icon: TextureRect
 @export var enemy_hp_label: RichTextLabel
+@export var enemy_energy_icon: TextureRect
 @export var enemy_energy_label: RichTextLabel
-@export var turns_label: RichTextLabel
 @export var end_turn_button: Button
-@export var result_label: RichTextLabel
 
 var game: GameState
 var turns: int = 0
@@ -30,7 +32,9 @@ var enemy_has_taken_turn: bool = false
 
 func _ready() -> void:
 	game = GameState.new()
+	game.energy_changed.connect(_on_energy_changed)
 	player_bv.setup(game.player_bs)
+	player_bv.is_player = true
 	player_bv.accepts_tile_drops = true
 	player_bv.tile_drop_requested.connect(_on_player_tile_drop_requested)
 	enemy_bv.setup(game.enemy_bs)
@@ -50,6 +54,48 @@ func _ready() -> void:
 	shop_view.setup(tile_pool, game.player_energy)
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
 	update_ui()
+
+	for thing in [player_hp_label, player_energy_label, enemy_hp_label, enemy_energy_label]:
+		thing.rotation_degrees = randf_range(-1.0, 1.0)
+
+		var tween = create_tween()
+
+		tween.set_loops()
+		tween.set_trans(Tween.TRANS_SINE)
+		tween.set_ease(Tween.EASE_IN_OUT)
+		tween.tween_property(thing, "rotation_degrees", 1.0, 5.0)
+		tween.tween_property(thing, "rotation_degrees", -1.0, 5.0)
+
+
+func _on_energy_changed(bs: BoardState) -> void:
+	var tween = create_tween()
+
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		player_energy_icon if bs == player_bv.board_state else enemy_energy_icon,
+		"scale",
+		Vector2(1.5, 1.5),
+		0.1
+	)
+	tween.parallel().tween_property(
+		player_energy_icon if bs == player_bv.board_state else enemy_energy_icon,
+		"rotation_degrees",
+		5,
+		0.1
+	)
+	tween.chain().tween_property(
+		player_energy_icon if bs == player_bv.board_state else enemy_energy_icon,
+		"scale",
+		Vector2.ONE,
+		0.1
+	)
+	tween.parallel().tween_property(
+		player_energy_icon if bs == player_bv.board_state else enemy_energy_icon,
+		"rotation_degrees",
+		0,
+		0.1
+	)
 
 
 func _on_player_tile_drop_requested(idx: int, definition: TileDefinition, offer_index: int) -> void:
@@ -465,8 +511,8 @@ func check_game_over() -> bool:
 
 func finish_game(result: String) -> void:
 	game_over = true
-	result_label.text = result
-	result_label.visible = true
+	#result_label.text = result
+	#result_label.visible = true
 	end_turn_button.disabled = true
 	shop_view.visible = false
 	player_bv.accepts_tile_drops = false
@@ -486,10 +532,9 @@ func update_ui() -> void:
 		enemy_hp += enemy_bv.board_state.cells[idx].hp
 		enemy_max_hp += enemy_bv.board_state.cells[idx].max_hp
 
-	player_hp_label.text = "Health: %d/%d" % [player_hp, player_max_hp]
-	player_energy_label.text = "Energy: %d/%d" % [game.player_energy, game.player_max_energy]
-	enemy_hp_label.text = "Health: %d/%d" % [enemy_hp, enemy_max_hp]
-	enemy_energy_label.text = "Energy: %d/%d" % [game.enemy_energy, game.enemy_max_energy]
+	player_hp_label.text = "%d/%d" % [player_hp, player_max_hp]
+	player_energy_label.text = "%d/%d" % [game.player_energy, game.player_max_energy]
+	enemy_hp_label.text = "%d/%d" % [enemy_hp, enemy_max_hp]
+	enemy_energy_label.text = "%d/%d" % [game.enemy_energy, game.enemy_max_energy]
 	player_bv.available_energy = game.player_energy
-	turns_label.text = "Turns: %d" % turns
 	shop_view.update_energy(game.player_energy)

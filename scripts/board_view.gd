@@ -8,13 +8,16 @@ const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/board_cell.tscn")
 const EMPTY_CELL_ICON: Texture2D = preload("res://textures/empty_board_cell.png")
 const OCCUPIED_CELL_ICON: Texture2D = preload("res://textures/board_cell.png")
 
+var main: Main
 var board_state: BoardState
 var cell_buttons: Array[BoardCell] = []
 var accepts_tile_drops: bool = false
 var available_energy: int = 0
+var is_player: bool = false
 
 
 func _ready() -> void:
+	main = get_parent().get_parent()
 	get_parent().rotation_degrees = randf_range(-1.0, 1.0)
 
 	var tween = create_tween()
@@ -30,6 +33,37 @@ func _on_cell_pressed(idx: int) -> void:
 	cell_pressed.emit(idx)
 
 
+func _on_health_changed() -> void:
+	var tween = create_tween()
+
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		main.player_hp_icon if is_player else main.enemy_hp_icon,
+		"scale",
+		Vector2(1.5, 1.5),
+		0.1
+	)
+	tween.parallel().tween_property(
+		main.player_hp_icon if is_player else main.enemy_hp_icon,
+		"rotation_degrees",
+		5,
+		0.1
+	)
+	tween.chain().tween_property(
+		main.player_hp_icon if is_player else main.enemy_hp_icon,
+		"scale",
+		Vector2.ONE,
+		0.1
+	)
+	tween.parallel().tween_property(
+		main.player_hp_icon if is_player else main.enemy_hp_icon,
+		"rotation_degrees",
+		0,
+		0.1
+	)
+
+
 func setup(p_board_state: BoardState) -> void:
 	board_state = p_board_state
 
@@ -39,6 +73,10 @@ func setup(p_board_state: BoardState) -> void:
 		b_cell.cell_idx = idx
 		b_cell.board_view = self
 		b_cell.pressed.connect(_on_cell_pressed.bind(idx))
+
+		if b_cell.displayed_tile:
+			b_cell.displayed_tile.health_changed.connect(_on_health_changed)
+
 		add_child(b_cell)
 		cell_buttons.append(b_cell)
 
@@ -67,6 +105,9 @@ func refresh() -> void:
 			b_cell.turns_until_destroyed_label.text = ""
 		else:
 			tile.bc = b_cell
+
+			if not tile.health_changed.is_connected(_on_health_changed):
+				tile.health_changed.connect(_on_health_changed)
 
 			if b_cell.displayed_tile != tile or b_cell.displayed_is_alive != tile.is_alive():
 				b_cell.tile_icon.modulate = Color.WHITE if tile.is_alive() else Color.WHITE.darkened(0.5)
