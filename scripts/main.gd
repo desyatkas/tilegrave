@@ -169,6 +169,11 @@ func _on_end_turn_pressed() -> void:
 	player_bv.refresh()
 	update_ui()
 
+	if check_game_over():
+		update_ui()
+
+		return
+
 	await run_enemy_turn()
 
 	enemy_has_taken_turn = true

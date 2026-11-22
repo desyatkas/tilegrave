@@ -9,7 +9,7 @@ var player_bs: BoardState
 var enemy_bs: BoardState
 var player_energy: int = 8
 var player_max_energy: int = 16
-var enemy_energy: int = 4
+var enemy_energy: int = 8
 var enemy_max_energy: int = 16
 
 
