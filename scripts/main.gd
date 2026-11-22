@@ -23,6 +23,10 @@ const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.t
 @export var enemy_energy_icon: TextureRect
 @export var enemy_energy_label: RichTextLabel
 @export var end_turn_button: Button
+@export var main_menu_panel: Panel
+@export var logo: TextureRect
+@export var play_button: Button
+@export var quit_button: Button
 
 var game: GameState
 var turns: int = 0
@@ -55,7 +59,7 @@ func _ready() -> void:
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
 	update_ui()
 
-	for thing in [player_hp_label, player_energy_label, enemy_hp_label, enemy_energy_label]:
+	for thing in [logo, player_hp_label, player_energy_label, enemy_hp_label, enemy_energy_label]:
 		thing.rotation_degrees = randf_range(-1.0, 1.0)
 
 		var tween = create_tween()
@@ -538,3 +542,38 @@ func update_ui() -> void:
 	enemy_energy_label.text = "%d/%d" % [game.enemy_energy, game.enemy_max_energy]
 	player_bv.available_energy = game.player_energy
 	shop_view.update_energy(game.player_energy)
+
+
+func _on_play_button_pressed() -> void:
+	var tween = create_tween()
+
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_IN)
+	tween.tween_property(
+		main_menu_panel,
+		"global_position:y",
+		-main_menu_panel.size.y - 8,
+		1.0
+	)
+
+	await get_tree().create_timer(0.666).timeout
+
+	player_bv.get_parent().visible = true
+	enemy_bv.get_parent().visible = true
+	shop_view.get_parent().visible = true
+
+	await get_tree().create_timer(0.111).timeout
+
+	player_hp_icon.visible = true
+	player_hp_label.visible = true
+	player_energy_icon.visible = true
+	player_energy_label.visible = true
+	enemy_hp_icon.visible = true
+	enemy_hp_label.visible = true
+	enemy_energy_icon.visible = true
+	enemy_energy_label.visible = true
+	end_turn_button.visible = true
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()
