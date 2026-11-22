@@ -25,6 +25,7 @@ const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.t
 @export var end_turn_button: Button
 @export var main_menu_panel: Panel
 @export var logo: TextureRect
+@export var version_label: RichTextLabel
 @export var results_panel: Panel
 @export var results_title: RichTextLabel
 
@@ -36,6 +37,7 @@ var enemy_has_taken_turn: bool = false
 
 
 func _ready() -> void:
+	version_label.text = "v%s" % ProjectSettings.get_setting("application/config/version")
 	game = GameState.new()
 	game.energy_changed.connect(_on_energy_changed)
 	player_bv.setup(game.player_bs)
@@ -60,7 +62,21 @@ func _ready() -> void:
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
 	update_ui()
 
-	for thing in [logo, player_hp_label, player_energy_label, enemy_hp_label, enemy_energy_label]:
+	for thing in [
+			player_hp_icon,
+			player_hp_label,
+			player_energy_icon,
+			player_energy_label,
+			enemy_hp_icon,
+			enemy_hp_label,
+			enemy_energy_icon,
+			enemy_energy_label,
+			end_turn_button,
+			main_menu_panel,
+			logo,
+			results_panel,
+			results_title
+	]:
 		thing.rotation_degrees = randf_range(-1.0, 1.0)
 
 		var tween = create_tween()
@@ -570,7 +586,7 @@ func _on_play_button_pressed() -> void:
 	tween.tween_property(
 		main_menu_panel,
 		"global_position:y",
-		-main_menu_panel.size.y - 8,
+		-main_menu_panel.size.y - 32.0,
 		1.0
 	)
 

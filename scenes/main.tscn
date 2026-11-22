@@ -12,7 +12,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
 shader = ExtResource("3_tbgi4")
 
-[node name="Main" type="Control" unique_id=1556792486 node_paths=PackedStringArray("player_bv", "enemy_bv", "shop_view", "player_hp_icon", "player_hp_label", "player_energy_icon", "player_energy_label", "enemy_hp_icon", "enemy_hp_label", "enemy_energy_icon", "enemy_energy_label", "end_turn_button", "main_menu_panel", "logo", "results_panel", "results_title")]
+[node name="Main" type="Control" unique_id=1556792486 node_paths=PackedStringArray("player_bv", "enemy_bv", "shop_view", "player_hp_icon", "player_hp_label", "player_energy_icon", "player_energy_label", "enemy_hp_icon", "enemy_hp_label", "enemy_energy_icon", "enemy_energy_label", "end_turn_button", "main_menu_panel", "logo", "version_label", "results_panel", "results_title")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -35,6 +35,7 @@ enemy_energy_label = NodePath("EnemyEnergyLabel")
 end_turn_button = NodePath("EndTurnButton")
 main_menu_panel = NodePath("MainMenuPanel")
 logo = NodePath("MainMenuPanel/Logo")
+version_label = NodePath("MainMenuPanel/Version")
 results_panel = NodePath("ResultsPanel")
 results_title = NodePath("ResultsPanel/Title")
 
@@ -169,6 +170,7 @@ offset_right = -416.0
 offset_bottom = -284.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.89411765, 0.23137255, 0.26666668, 1)
 theme_override_font_sizes/normal_font_size = 32
 text = "4/4"
@@ -206,6 +208,7 @@ offset_right = -160.0
 offset_bottom = -284.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.99607843, 0.90588236, 0.38039216, 1)
 theme_override_font_sizes/normal_font_size = 32
 text = "8/16"
@@ -243,6 +246,7 @@ offset_right = 416.0
 offset_bottom = -284.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.89411765, 0.23137255, 0.26666668, 1)
 theme_override_font_sizes/normal_font_size = 32
 text = "4/4"
@@ -280,6 +284,7 @@ offset_right = 672.0
 offset_bottom = -284.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_colors/default_color = Color(0.99607843, 0.90588236, 0.38039216, 1)
 theme_override_font_sizes/normal_font_size = 32
 text = "8/16"
@@ -299,6 +304,7 @@ offset_right = 80.0
 offset_bottom = -300.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 text = "End Turn"
 
 [node name="MainMenuPanel" type="Panel" parent="." unique_id=1993039336]
@@ -314,6 +320,7 @@ offset_right = -224.0
 offset_bottom = 324.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="LogoShadow" type="TextureRect" parent="MainMenuPanel" unique_id=20648907]
 modulate = Color(0, 0, 0, 1)
@@ -341,6 +348,23 @@ pivot_offset_ratio = Vector2(0.5, 0.5)
 texture = ExtResource("8_tipki")
 stretch_mode = 5
 
+[node name="Description" type="RichTextLabel" parent="MainMenuPanel" unique_id=610933192]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -176.0
+offset_top = -32.0
+offset_right = 176.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Turn-based battle of strategy, sacrifice, and surprises."
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="PlayButton" type="Button" parent="MainMenuPanel" unique_id=441138115]
 layout_mode = 1
 anchors_preset = 8
@@ -349,9 +373,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -288.0
-offset_top = 32.0
+offset_top = 96.0
 offset_right = -32.0
-offset_bottom = 96.0
+offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Play"
@@ -364,12 +388,25 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 32.0
-offset_top = 32.0
+offset_top = 96.0
 offset_right = 288.0
-offset_bottom = 96.0
+offset_bottom = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Quit"
+
+[node name="Version" type="RichTextLabel" parent="MainMenuPanel" unique_id=1196356260]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "v0.0.0"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="ResultsPanel" type="Panel" parent="." unique_id=18017380]
 z_index = 999
@@ -379,11 +416,12 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = 224.0
-offset_top = -868.0
+offset_top = -892.0
 offset_right = -224.0
-offset_bottom = -548.0
+offset_bottom = -572.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 
 [node name="Title" type="RichTextLabel" parent="ResultsPanel" unique_id=760892339]
 layout_mode = 1
@@ -392,6 +430,7 @@ anchor_right = 1.0
 offset_top = 32.0
 offset_bottom = 160.0
 grow_horizontal = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
 theme_override_font_sizes/normal_font_size = 72
 text = "Victory!"
 horizontal_alignment = 1
