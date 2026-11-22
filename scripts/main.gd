@@ -11,6 +11,7 @@ const BOMB_TILE: TileDefinition = preload("res://resources/bomb_tile.tres")
 const NECROMANCER_TILE: TileDefinition = preload("res://resources/necromancer_tile.tres")
 const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.tres")
 
+@export var back_to_main_menu_button: Button
 @export var player_bv: BoardView
 @export var enemy_bv: BoardView
 @export var shop_view: ShopView
@@ -617,6 +618,10 @@ func _on_play_button_pressed() -> void:
 	enemy_energy_icon.visible = true
 	enemy_energy_label.visible = true
 	end_turn_button.visible = true
+
+	await get_tree().create_timer(0.111).timeout
+
+	back_to_main_menu_button.visible = true
 
 
 func _on_quit_button_pressed() -> void:
