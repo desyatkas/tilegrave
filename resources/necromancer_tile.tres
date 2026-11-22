@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bnd7y4mrq5gv2" path="res://textures/necromancer.png" id="1_5c6rc"]
 [ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_bfldj"]
+[ext_resource type="AudioStream" uid="uid://bx7axr7tqybns" path="res://sounds/necromancer.wav" id="1_wn37i"]
 
 [resource]
 script = ExtResource("1_bfldj")
@@ -12,4 +13,5 @@ description = "If there are dead tiles, revives
 all of them and takes damage."
 max_hp = 2
 cost = 9
+ability_sfx = ExtResource("1_wn37i")
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

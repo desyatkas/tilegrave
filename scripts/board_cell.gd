@@ -5,6 +5,10 @@ extends Button
 @export var tile_icon: TextureRect
 @export var hp_label: RichTextLabel
 @export var turns_until_destroyed_label: RichTextLabel
+@export var hover_sfx: AudioStreamPlayer
+@export var ability_sfx: AudioStreamPlayer
+@export var death_sfx: AudioStreamPlayer
+@export var revival_sfx: AudioStreamPlayer
 
 var cell_idx: int = -1
 var board_view: BoardView
@@ -51,6 +55,8 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 func _on_mouse_entered() -> void:
 	if not board_view.board_state.cells[cell_idx]:
 		return
+
+	hover_sfx.play()
 
 	if tween and tween.is_running():
 		tween.kill()
@@ -137,6 +143,8 @@ func animate_ability_end() -> void:
 	z_index = 0
 
 func animate_death() -> void:
+	death_sfx.play()
+
 	if effect_tween and effect_tween.is_running():
 		effect_tween.kill()
 
@@ -196,7 +204,14 @@ func animate_death() -> void:
 	)
 
 
+func play_ability_sfx() -> void:
+	ability_sfx.stream = displayed_tile.definition.ability_sfx
+	ability_sfx.play()
+
+
 func animate_revival() -> void:
+	revival_sfx.play()
+
 	if effect_tween and effect_tween.is_running():
 		effect_tween.kill()
 

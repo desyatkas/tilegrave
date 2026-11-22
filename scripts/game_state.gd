@@ -266,6 +266,8 @@ func resolve_ability(bs: BoardState, idx: int) -> void:
 	if tile == null or not tile.is_alive():
 		return
 
+	tile.bc.play_ability_sfx()
+
 	match tile.definition.id:
 		&"sword":
 			_resolve_sword(bs, idx)

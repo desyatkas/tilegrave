@@ -28,6 +28,10 @@ const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.t
 @export var version_label: RichTextLabel
 @export var results_panel: Panel
 @export var results_title: RichTextLabel
+@export var defeat_sfx: AudioStreamPlayer
+@export var draw_sfx: AudioStreamPlayer
+@export var victory_sfx: AudioStreamPlayer
+@export var click_sfx: AudioStreamPlayer
 
 
 var game: GameState
@@ -151,6 +155,7 @@ func _on_end_turn_pressed() -> void:
 	if game_over:
 		return
 
+	click_sfx.play()
 	end_turn_button.disabled = true
 	player_bv.accepts_tile_drops = false
 	turns += 1
@@ -538,10 +543,13 @@ func finish_game(result: float) -> void:
 
 	match result:
 		0.0:
+			defeat_sfx.play()
 			results_title.text = "Defeat!"
 		0.5:
+			draw_sfx.play()
 			results_title.text = "Draw!"
 		1.0:
+			victory_sfx.play()
 			results_title.text = "Victory!"
 
 	var tween = create_tween()
@@ -579,6 +587,8 @@ func update_ui() -> void:
 
 
 func _on_play_button_pressed() -> void:
+	click_sfx.play()
+
 	var tween = create_tween()
 
 	tween.set_trans(Tween.TRANS_BACK)
@@ -610,8 +620,16 @@ func _on_play_button_pressed() -> void:
 
 
 func _on_quit_button_pressed() -> void:
+	click_sfx.play()
+
+	await click_sfx.finished
+
 	get_tree().quit()
 
 
 func _on_back_to_main_menu_button_pressed() -> void:
+	click_sfx.play()
+
+	await click_sfx.finished
+
 	get_tree().reload_current_scene()

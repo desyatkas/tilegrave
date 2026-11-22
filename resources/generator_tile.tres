@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://vqwj5hxgubin"]
 
 [ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_432xn"]
+[ext_resource type="AudioStream" uid="uid://c5u3wxoponcgr" path="res://sounds/generator.wav" id="1_wxc38"]
 [ext_resource type="Texture2D" uid="uid://b5bcr66wxwhx7" path="res://textures/generator.png" id="1_wy8kd"]
 
 [resource]
@@ -15,4 +16,5 @@ point every time it produces
 some energy."
 max_hp = 4
 cost = 8
+ability_sfx = ExtResource("1_wxc38")
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

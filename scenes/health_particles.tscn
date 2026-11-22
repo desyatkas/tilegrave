@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bj51kjrgvhlro"]
 
 [ext_resource type="Script" uid="uid://png5ojwadvpu" path="res://scripts/health_particles.gd" id="1_eiv0k"]
+[ext_resource type="AudioStream" uid="uid://bx4h2sh6asnbt" path="res://sounds/damage.wav" id="2_benxi"]
+[ext_resource type="AudioStream" uid="uid://b4ko0nmsou3t7" path="res://sounds/heal.wav" id="2_tppit"]
 
 [sub_resource type="Gradient" id="Gradient_kyjo8"]
 offsets = PackedFloat32Array(0, 0.5, 1)
@@ -32,12 +34,30 @@ scale_max = 2.0
 scale_curve = SubResource("CurveTexture_nih77")
 color_ramp = SubResource("GradientTexture1D_0n13k")
 
-[node name="HealthParticles" type="GPUParticles2D" unique_id=1481208172]
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_eiv0k"]
+random_pitch = 1.0293022
+streams_count = 1
+stream_0/stream = ExtResource("2_tppit")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_benxi"]
+random_pitch = 1.0293022
+streams_count = 1
+stream_0/stream = ExtResource("2_benxi")
+
+[node name="HealthParticles" type="GPUParticles2D" unique_id=1481208172 node_paths=PackedStringArray("plus_sfx", "minus_sfx")]
 emitting = false
 amount = 1
 one_shot = true
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_mmiu6")
 script = ExtResource("1_eiv0k")
+plus_sfx = NodePath("PlusSFX")
+minus_sfx = NodePath("MinusSFX")
+
+[node name="PlusSFX" type="AudioStreamPlayer" parent="." unique_id=386107479]
+stream = SubResource("AudioStreamRandomizer_eiv0k")
+
+[node name="MinusSFX" type="AudioStreamPlayer" parent="." unique_id=288671535]
+stream = SubResource("AudioStreamRandomizer_benxi")
 
 [connection signal="finished" from="." to="." method="_on_finished"]

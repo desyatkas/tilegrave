@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://y66n7025h1j6" path="res://textures/sword.png" id="1_y2oey"]
 [ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_ylhu5"]
+[ext_resource type="AudioStream" uid="uid://dj7ac7syig85u" path="res://sounds/sword.wav" id="1_ywauj"]
 
 [resource]
 script = ExtResource("1_ylhu5")
@@ -12,4 +13,5 @@ description = "Deals damage to the enemy
 tile in the same cell."
 max_hp = 2
 cost = 6
+ability_sfx = ExtResource("1_ywauj")
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

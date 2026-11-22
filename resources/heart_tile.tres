@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://bfbrs42m42vi0" path="res://textures/heart.png" id="1_7i0hy"]
 [ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="2_batq3"]
 
+[sub_resource type="AudioStream" id="AudioStream_hgvrn"]
+
 [resource]
 script = ExtResource("2_batq3")
 id = &"heart"
@@ -12,4 +14,5 @@ description = "Doesn't do anything, just a
 container for health."
 max_hp = 4
 cost = 2
+ability_sfx = SubResource("AudioStream_hgvrn")
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

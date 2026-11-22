@@ -4,8 +4,14 @@
 [ext_resource type="Script" uid="uid://ccc14rc8jcjyv" path="res://scripts/shop_offer.gd" id="1_ogbwv"]
 [ext_resource type="Texture2D" uid="uid://dfn3hv00kn03t" path="res://textures/board_cell.png" id="3_i507k"]
 [ext_resource type="Texture2D" uid="uid://bfbrs42m42vi0" path="res://textures/heart.png" id="4_yno8c"]
+[ext_resource type="AudioStream" uid="uid://12rflprhcedy" path="res://sounds/hover.wav" id="5_yno8c"]
 
-[node name="ShopOffer" type="Button" unique_id=1149802112 node_paths=PackedStringArray("board_cell_icon", "offer_icon", "cost_label")]
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_8v861"]
+random_pitch = 1.0293022
+streams_count = 1
+stream_0/stream = ExtResource("5_yno8c")
+
+[node name="ShopOffer" type="Button" unique_id=1149802112 node_paths=PackedStringArray("board_cell_icon", "offer_icon", "cost_label", "hover_sfx")]
 offset_right = 112.0
 offset_bottom = 112.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -17,6 +23,7 @@ script = ExtResource("1_ogbwv")
 board_cell_icon = NodePath("BoardCellIcon")
 offer_icon = NodePath("OfferIcon")
 cost_label = NodePath("CostLabel")
+hover_sfx = NodePath("HoverSFX")
 
 [node name="BoardCellIcon" type="TextureRect" parent="." unique_id=2090304001]
 layout_mode = 1
@@ -57,6 +64,9 @@ theme_override_font_sizes/normal_font_size = 32
 text = "99"
 horizontal_alignment = 2
 vertical_alignment = 2
+
+[node name="HoverSFX" type="AudioStreamPlayer" parent="." unique_id=729876314]
+stream = SubResource("AudioStreamRandomizer_8v861")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

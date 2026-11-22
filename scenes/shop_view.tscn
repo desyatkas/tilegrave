@@ -2,10 +2,20 @@
 
 [ext_resource type="Script" uid="uid://cj0lg6oolssg2" path="res://scripts/shop_view.gd" id="1_q4jju"]
 [ext_resource type="Theme" uid="uid://dte3u6srlobrf" path="res://resources/theme.tres" id="1_wpwgs"]
+[ext_resource type="AudioStream" uid="uid://b54lj8x71eb0e" path="res://sounds/shop_offer_purchase.wav" id="3_kjwl7"]
 
-[node name="ShopView" type="GridContainer" unique_id=1978257146]
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_wpwgs"]
+random_pitch = 1.0293022
+streams_count = 1
+stream_0/stream = ExtResource("3_kjwl7")
+
+[node name="ShopView" type="GridContainer" unique_id=1978257146 node_paths=PackedStringArray("purchase_sfx")]
 offset_right = 112.0
 offset_bottom = 512.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 theme = ExtResource("1_wpwgs")
 script = ExtResource("1_q4jju")
+purchase_sfx = NodePath("PurchaseSFX")
+
+[node name="PurchaseSFX" type="AudioStreamPlayer" parent="." unique_id=1322129332]
+stream = SubResource("AudioStreamRandomizer_wpwgs")

@@ -3,6 +3,8 @@ extends GridContainer
 
 const SHOP_OFFER_SCENE = preload("res://scenes/shop_offer.tscn")
 
+@export var purchase_sfx: AudioStreamPlayer
+
 var tile_pool: Array[TileDefinition]
 var offers: Array[ShopOffer]
 
@@ -65,6 +67,7 @@ func consume_offer(idx: int) -> void:
 	if idx < 0 or idx >= offers.size():
 		return
 
+	purchase_sfx.play()
 	offers[idx].mark_sold_out()
 
 

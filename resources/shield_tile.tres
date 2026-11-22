@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://yh2fabnw340w"]
 
+[ext_resource type="AudioStream" uid="uid://tttd51n4q56h" path="res://sounds/shield.wav" id="1_5yvgr"]
 [ext_resource type="Texture2D" uid="uid://lst11wg6gccs" path="res://textures/shield.png" id="1_k2kuc"]
 [ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="2_5yvgr"]
 
@@ -12,4 +13,5 @@ description = "Prevents neighbor tiles from
 dying."
 max_hp = 4
 cost = 8
+ability_sfx = ExtResource("1_5yvgr")
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

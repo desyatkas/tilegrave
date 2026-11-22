@@ -4,8 +4,26 @@
 [ext_resource type="Script" uid="uid://dt7qp0ji1ptme" path="res://scripts/board_cell.gd" id="1_b2452"]
 [ext_resource type="Texture2D" uid="uid://dfn3hv00kn03t" path="res://textures/board_cell.png" id="3_ked58"]
 [ext_resource type="Texture2D" uid="uid://bfbrs42m42vi0" path="res://textures/heart.png" id="4_wvn1a"]
+[ext_resource type="AudioStream" uid="uid://12rflprhcedy" path="res://sounds/hover.wav" id="5_fd5yo"]
+[ext_resource type="AudioStream" uid="uid://dwet34y71xgga" path="res://sounds/death.wav" id="5_wvn1a"]
+[ext_resource type="AudioStream" uid="uid://xggli8us2mgf" path="res://sounds/revival.wav" id="6_iy72k"]
 
-[node name="BoardCell" type="Button" unique_id=1613266187 node_paths=PackedStringArray("cell_icon", "tile_icon", "hp_label", "turns_until_destroyed_label")]
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_pnt0r"]
+random_pitch = 1.0293022
+streams_count = 1
+stream_0/stream = ExtResource("5_fd5yo")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_iy72k"]
+random_pitch = 1.0293022
+streams_count = 1
+stream_0/stream = ExtResource("5_wvn1a")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_fd5yo"]
+random_pitch = 1.0293022
+streams_count = 1
+stream_0/stream = ExtResource("6_iy72k")
+
+[node name="BoardCell" type="Button" unique_id=1613266187 node_paths=PackedStringArray("cell_icon", "tile_icon", "hp_label", "turns_until_destroyed_label", "hover_sfx", "ability_sfx", "death_sfx", "revival_sfx")]
 offset_right = 112.0
 offset_bottom = 112.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
@@ -18,6 +36,10 @@ cell_icon = NodePath("CellIcon")
 tile_icon = NodePath("CellIcon/TileIcon")
 hp_label = NodePath("CellIcon/HPLabel")
 turns_until_destroyed_label = NodePath("TurnsUntilDestroyedLabel")
+hover_sfx = NodePath("HoverSFX")
+ability_sfx = NodePath("AbilitySFX")
+death_sfx = NodePath("DeathSFX")
+revival_sfx = NodePath("RevivalSFX")
 
 [node name="CellIcon" type="TextureRect" parent="." unique_id=384835311]
 layout_mode = 1
@@ -71,6 +93,17 @@ theme_override_colors/default_color = Color(1, 0, 0.26666668, 1)
 theme_override_font_sizes/normal_font_size = 64
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="HoverSFX" type="AudioStreamPlayer" parent="." unique_id=1402730000]
+stream = SubResource("AudioStreamRandomizer_pnt0r")
+
+[node name="AbilitySFX" type="AudioStreamPlayer" parent="." unique_id=1229284834]
+
+[node name="DeathSFX" type="AudioStreamPlayer" parent="." unique_id=1633677634]
+stream = SubResource("AudioStreamRandomizer_iy72k")
+
+[node name="RevivalSFX" type="AudioStreamPlayer" parent="." unique_id=387815371]
+stream = SubResource("AudioStreamRandomizer_fd5yo")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

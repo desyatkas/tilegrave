@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="TileDefinition" format=3 uid="uid://bsneek7ojiuee"]
 
+[ext_resource type="AudioStream" uid="uid://byjwoiwid1hd4" path="res://sounds/mirror.wav" id="1_0treu"]
 [ext_resource type="Texture2D" uid="uid://yvaaix7kxhrb" path="res://textures/horizontal_mirror.png" id="1_e7vi1"]
 [ext_resource type="Script" uid="uid://ci6utw6o0hdlm" path="res://scripts/tile_definition.gd" id="1_oe135"]
 
@@ -14,4 +15,5 @@ clone onto the right cell (if
 empty)."
 max_hp = 3
 cost = 9
+ability_sfx = ExtResource("1_0treu")
 metadata/_custom_type_script = "uid://ci6utw6o0hdlm"

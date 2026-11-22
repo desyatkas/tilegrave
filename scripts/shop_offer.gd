@@ -7,6 +7,7 @@ const OCCUPIED_CELL_ICON: Texture2D = preload("res://textures/board_cell.png")
 @export var board_cell_icon: TextureRect
 @export var offer_icon: TextureRect
 @export var cost_label: RichTextLabel
+@export var hover_sfx: AudioStreamPlayer
 
 var definition: TileDefinition
 var offer_index: int
@@ -30,6 +31,8 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 func _on_mouse_entered() -> void:
 	if not definition or not affordable:
 		return
+
+	hover_sfx.play()
 
 	if tween and tween.is_running():
 		tween.kill()
