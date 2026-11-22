@@ -25,8 +25,9 @@ const GENERATOR_TILE: TileDefinition = preload("res://resources/generator_tile.t
 @export var end_turn_button: Button
 @export var main_menu_panel: Panel
 @export var logo: TextureRect
-@export var play_button: Button
-@export var quit_button: Button
+@export var results_panel: Panel
+@export var results_title: RichTextLabel
+
 
 var game: GameState
 var turns: int = 0
@@ -495,31 +496,48 @@ func check_game_over() -> bool:
 	var player_alive: bool = not game.player_bs.get_alive_indices().is_empty()
 	var enemy_alive: bool = not game.enemy_bs.get_alive_indices().is_empty()
 
-	if not player_alive and enemy_has_taken_turn and not enemy_alive:
-		finish_game("DRAW!")
+	if not player_alive:
+		finish_game(0.0)
 
 		return true
 
-	if not player_alive:
-		finish_game("DEFEAT!")
+	if not player_alive and enemy_has_taken_turn and not enemy_alive:
+		finish_game(0.5)
 
 		return true
 
 	if enemy_has_taken_turn and not enemy_alive:
-		finish_game("VICTORY!")
+		finish_game(1.0)
 
 		return true
 
 	return false
 
 
-func finish_game(result: String) -> void:
+func finish_game(result: float) -> void:
 	game_over = true
-	#result_label.text = result
-	#result_label.visible = true
 	end_turn_button.disabled = true
 	shop_view.visible = false
 	player_bv.accepts_tile_drops = false
+
+	match result:
+		0.0:
+			results_title.text = "Defeat!"
+		0.5:
+			results_title.text = "Draw!"
+		1.0:
+			results_title.text = "Victory!"
+
+	var tween = create_tween()
+
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		results_panel,
+		"global_position:y",
+		320.0,
+		1.0
+	)
 
 
 func update_ui() -> void:
@@ -577,3 +595,7 @@ func _on_play_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_back_to_main_menu_button_pressed() -> void:
+	get_tree().reload_current_scene()
