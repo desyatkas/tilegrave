@@ -36,7 +36,6 @@ func _resolve_sword(bs: BoardState, idx: int) -> void:
 		return
 
 	target.take_damage(1)
-	bs.cells[idx].bc.play_ability_sfx()
 
 
 func _resolve_medkit(bs: BoardState, idx: int) -> void:
@@ -57,7 +56,6 @@ func _resolve_medkit(bs: BoardState, idx: int) -> void:
 
 	target.heal(1)
 	bs.cells[idx].take_damage(1)
-	bs.cells[idx].bc.play_ability_sfx()
 
 
 func _resolve_shield(bs: BoardState, idx: int) -> void:
@@ -94,7 +92,6 @@ func _resolve_shield(bs: BoardState, idx: int) -> void:
 			continue
 
 		neighbor.hp = mini(neighbor.max_hp, maxi(neighbor.hp, 2))
-		bs.cells[idx].bc.play_ability_sfx()
 
 
 func _resolve_mirror(bs: BoardState, idx: int) -> void:
@@ -142,7 +139,6 @@ func _resolve_mirror(bs: BoardState, idx: int) -> void:
 	target_tile.queue_visual_event(TileState.VisualEvent.CLONE_TARGET)
 	source_tile.queue_visual_event(TileState.VisualEvent.CLONE_SOURCE)
 	bs.set_tile(target.x, target.y, target_tile)
-	bs.cells[idx].bc.play_ability_sfx()
 
 
 func _resolve_bomb(bs: BoardState, idx: int) -> void:
@@ -184,7 +180,6 @@ func _resolve_bomb(bs: BoardState, idx: int) -> void:
 		neighbor.take_damage(1)
 
 	bs.cells[idx].take_damage(bs.cells[idx].hp)
-	bs.cells[idx].bc.play_ability_sfx()
 
 
 func _resolve_necromancer(bs: BoardState, idx: int) -> void:
@@ -200,7 +195,6 @@ func _resolve_necromancer(bs: BoardState, idx: int) -> void:
 
 	if did_heal:
 		bs.cells[idx].take_damage(1)
-		bs.cells[idx].bc.play_ability_sfx()
 
 
 func _resolve_generator(bs: BoardState, idx) -> void:
@@ -213,7 +207,6 @@ func _resolve_generator(bs: BoardState, idx) -> void:
 
 	if energy_gain > 0:
 		bs.cells[idx].take_damage(1)
-		bs.cells[idx].bc.play_ability_sfx()
 
 
 func purchase_tile(board: BoardState, x: int, y: int, definition: TileDefinition) -> bool:
@@ -277,6 +270,8 @@ func resolve_ability(bs: BoardState, idx: int) -> void:
 
 	if tile == null or not tile.is_alive():
 		return
+
+	bs.cells[idx].bc.ability_sfx.play()
 
 	match tile.definition.id:
 		&"sword":
