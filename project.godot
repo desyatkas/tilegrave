@@ -14,6 +14,7 @@ config/name="Tilegrave"
 config/version="0.1.0-dev"
 run/main_scene="uid://dvyurtxq7dkf"
 config/features=PackedStringArray("4.7", "Forward Plus")
+boot_splash/show_image=false
 config/icon="uid://cya754srprgc2"
 
 [display]
